@@ -337,16 +337,16 @@ export default function Flight_Search_Detail() {
                     )}
                   </span>
                   {Number(adults) ||
-                  Number(children_count) ||
-                  Number(infant_count) ? (
+                    Number(children_count) ||
+                    Number(infant_count) ? (
                     <span className="inline-flex items-center gap-2 px-3 py-1 rounded sky_yellow">
                       {[
                         Number(adults) > 0 &&
-                          `${adults} adult${Number(adults) > 1 ? "s" : ""}`,
+                        `${adults} adult${Number(adults) > 1 ? "s" : ""}`,
                         Number(children_count) > 0 &&
-                          `${children_count} child${Number(children_count) > 1 ? "ren" : ""}`,
+                        `${children_count} child${Number(children_count) > 1 ? "ren" : ""}`,
                         Number(infant_count) > 0 &&
-                          `${infant_count} infant${Number(infant_count) > 1 ? "s" : ""}`,
+                        `${infant_count} infant${Number(infant_count) > 1 ? "s" : ""}`,
                       ]
                         .filter(Boolean)
                         .join(", ")}
@@ -412,9 +412,9 @@ export default function Flight_Search_Detail() {
 
                       const depTime = firstSeg
                         ? moment(
-                            firstSeg?.departure_airport?.time,
-                            "YYYY-MM-DD HH:mm",
-                          ).format("h:mm A")
+                          firstSeg?.departure_airport?.time,
+                          "YYYY-MM-DD HH:mm",
+                        ).format("h:mm A")
                         : "";
 
                       console.log(
@@ -439,8 +439,8 @@ export default function Flight_Search_Detail() {
                                   $
                                   {displayPrice(
                                     item?.price ||
-                                      data?.data?.flights?.price_insights
-                                        ?.lowest_price,
+                                    data?.data?.flights?.price_insights
+                                      ?.lowest_price,
                                   ).toLocaleString()}
                                 </div>
 
@@ -521,8 +521,8 @@ export default function Flight_Search_Detail() {
                                 $
                                 {displayPrice(
                                   item?.price ||
-                                    data?.data?.flights?.price_insights
-                                      ?.lowest_price,
+                                  data?.data?.flights?.price_insights
+                                    ?.lowest_price,
                                 ).toLocaleString()}
                               </div>
                               <Link
@@ -561,9 +561,9 @@ export default function Flight_Search_Detail() {
                               }
                               const arrTime = plane
                                 ? moment(
-                                    plane?.arrival_airport?.time,
-                                    "YYYY-MM-DD HH:mm",
-                                  ).format("h:mm A")
+                                  plane?.arrival_airport?.time,
+                                  "YYYY-MM-DD HH:mm",
+                                ).format("h:mm A")
                                 : "";
 
                               const arrDateLabel = plane
@@ -650,7 +650,7 @@ export default function Flight_Search_Detail() {
 
                   {/* ******************************** OTHER FLIGHT SSSSSSSSS>>>>>>>> */}
                   <div className="other_flight">
-                    <h2 className="capitalize ">other fligths</h2>
+                    {/* <h2 className="capitalize ">other fligths</h2> */}
 
                     {hasOtherFlights &&
                       other_flight?.map((item, idx) => {
@@ -671,9 +671,9 @@ export default function Flight_Search_Detail() {
 
                         const depTime = firstSeg
                           ? moment(
-                              firstSeg?.departure_airport?.time,
-                              "YYYY-MM-DD HH:mm",
-                            ).format("h:mm A")
+                            firstSeg?.departure_airport?.time,
+                            "YYYY-MM-DD HH:mm",
+                          ).format("h:mm A")
                           : "";
 
                         console.log(
@@ -698,8 +698,8 @@ export default function Flight_Search_Detail() {
                                     $
                                     {displayPrice(
                                       item?.price ||
-                                        data?.data?.flights?.price_insights
-                                          ?.lowest_price,
+                                      data?.data?.flights?.price_insights
+                                        ?.lowest_price,
                                     ).toLocaleString()}
                                   </div>
 
@@ -777,8 +777,8 @@ export default function Flight_Search_Detail() {
                                   $
                                   {displayPrice(
                                     item?.price ||
-                                      data?.data?.flights?.price_insights
-                                        ?.lowest_price,
+                                    data?.data?.flights?.price_insights
+                                      ?.lowest_price,
                                   ).toLocaleString()}
                                 </div>
                                 <Link
@@ -820,9 +820,9 @@ export default function Flight_Search_Detail() {
                                 }
                                 const arrTime = plane
                                   ? moment(
-                                      plane?.arrival_airport?.time,
-                                      "YYYY-MM-DD HH:mm",
-                                    ).format("h:mm A")
+                                    plane?.arrival_airport?.time,
+                                    "YYYY-MM-DD HH:mm",
+                                  ).format("h:mm A")
                                   : "";
 
                                 const arrDateLabel = plane

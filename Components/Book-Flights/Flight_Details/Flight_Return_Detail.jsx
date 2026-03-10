@@ -489,9 +489,10 @@ export default function Flight_Return_Detail() {
                                                                         </Accordion.Body>
                                                                     </Accordion.Item>
                                                                 </>
+
                                                             );
                                                         })}
-                                                        <h2 className="other-flight py-2">Other flights</h2>
+
                                                         {/* ************************ other flight shoiw */}
                                                         {flights.map((item, index) => {
                                                             const segment = item?.flights?.[0];
@@ -515,17 +516,13 @@ export default function Flight_Return_Detail() {
                                                             const travelTime = `${travelHours}h ${travelRemainingMinutes}m`;
 
                                                             return (
-                                                                <React.Fragment
-                                                                    key={Math.random()
-                                                                        .toString(36)
-                                                                        .substring(2, 15)}
-                                                                >
+                                                                <>
                                                                     <Accordion.Item eventKey={`other-${index}`}>
                                                                         <Accordion.Header
                                                                             className="flight_accordian "
                                                                             onClick={() => {
                                                                                 setShowText(true)
-                                                                                if (otherActiveKey === i) {
+                                                                                if (otherActiveKey === index) {
                                                                                     setOtherActiveKey(null)
                                                                                 }
                                                                                 else {
@@ -771,7 +768,7 @@ export default function Flight_Return_Detail() {
                                                                             </div>
                                                                         </Accordion.Body>
                                                                     </Accordion.Item>
-                                                                </React.Fragment>
+                                                                </>
                                                             );
                                                         })}
                                                     </>

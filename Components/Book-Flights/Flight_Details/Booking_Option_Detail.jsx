@@ -263,7 +263,7 @@ export default function Booking_Option_Detail({ airlineName = "British Airways",
                             </div>
 
                             {/* Affiliate OTA links – always shown */}
-                            <div className="px-4 md:px-6 py-4 border-b border-gray-100">
+                            <div className="px-4 md:px-6 py-4 md_padding  compare m-0  border-b border-gray-100">
                                 <h3 className="text-base font-semibold text-gray-900  mb-1">Compare prices</h3>
                                 <p className="text-xs text-gray-500 mb-3">* Prices are approximate and may change on the booking website.</p>
                                 {/* <div className="space-y-2">

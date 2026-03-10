@@ -9,6 +9,7 @@ import {
 } from "react";
 
 const CURRENCY_STORAGE_KEY = "justbuytravel_currency";
+const CURRENCY_MANUAL_KEY = "justbuytravel_currency_manual";
 
 export const CURRENCY_RATES = {
   USD: 1,
@@ -17,20 +18,6 @@ export const CURRENCY_RATES = {
   AED: 3.67,
   SAR: 3.75,
   INR: 83.12,
-};
-
-// ✅ Country → Currency mapping
-const COUNTRY_CURRENCY_MAP = {
-  IN: "INR",
-  US: "USD",
-  GB: "GBP",
-  AE: "AED",
-  SA: "SAR",
-  DE: "EUR",
-  FR: "EUR",
-  IT: "EUR",
-  ES: "EUR",
-  NL: "EUR",
 };
 
 const basePath =
@@ -49,47 +36,54 @@ export const CURRENCY_LABELS = {
 
 const SUPPORTED_RATE_CURRENCIES = Object.keys(CURRENCY_RATES);
 const DEFAULT_CURRENCY = "USD";
-
 const CurrencyContext = createContext(null);
+
+function detectCurrencyFromBrowser() {
+  try {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    console.log("Browser Timezone:", timezone);
+    if (timezone.includes("Calcutta") || timezone.includes("Kolkata")) return "INR";
+    if (timezone.includes("Dubai") || timezone.includes("Abu_Dhabi")) return "AED";
+    if (timezone.includes("Riyadh") || timezone.includes("Arabia")) return "SAR";
+    if (timezone.includes("London")) return "GBP";
+    if (timezone.includes("New_York") || timezone.includes("Chicago") || timezone.includes("Los_Angeles")) return "USD";
+    if (timezone.includes("Paris") || timezone.includes("Berlin") || timezone.includes("Rome") || timezone.includes("Madrid") || timezone.includes("Amsterdam")) return "EUR";
+  } catch (e) {
+    console.error("Timezone detect failed", e);
+  }
+  return null;
+}
 
 export function CurrencyProvider({ children }) {
   const [currency, setCurrencyState] = useState(DEFAULT_CURRENCY);
   const [rates, setRates] = useState(CURRENCY_RATES);
   const [ratesLastUpdated, setRatesLastUpdated] = useState(null);
-
-  // ✅ localStorage check karo, nahi toh country detect karo
   useEffect(() => {
-    sessionStorage.clear()
-    localStorage.clear()
     if (typeof window === "undefined") return;
+    localStorage.removeItem(CURRENCY_STORAGE_KEY); // ✅ purana clear
 
-    const stored = localStorage.getItem(CURRENCY_STORAGE_KEY);
+    const stored = sessionStorage.getItem(CURRENCY_STORAGE_KEY); // ✅ session
     if (stored && stored.trim()) {
       setCurrencyState(stored.toUpperCase());
       return;
     }
-    async function detectCountry() {
-      try {
-        const res = await fetch("https://ipapi.co/json/");
-        const data = await res.json();
-        const countryCode = data?.country_code;
-        console.log("Detected country:", countryCode);
-        const detectedCurrency = COUNTRY_CURRENCY_MAP[countryCode];
-        if (detectedCurrency) {
-          setCurrencyState(detectedCurrency);
-        }
-      } catch (e) {
-        console.error("Country detect failed", e);
-      }
-    }
 
-    detectCountry();
+    // Detect from timezone
+    const detected = detectCurrencyFromBrowser();
+    if (detected) setCurrencyState(detected);
+  }, []);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    localStorage.removeItem(CURRENCY_STORAGE_KEY);
+    sessionStorage.removeItem(CURRENCY_STORAGE_KEY);
+
+    // Har baar fresh detect karo
+    const detected = detectCurrencyFromBrowser();
+    if (detected) setCurrencyState(detected);
   }, []);
 
-  // FX rates fetch
   useEffect(() => {
     let cancelled = false;
-
     async function loadRates() {
       try {
         const res = await fetch(FX_API_URL);
@@ -103,19 +97,28 @@ export function CurrencyProvider({ children }) {
         console.error("Failed to load FX rates, using static defaults", e);
       }
     }
-
     loadRates();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
+  // const setCurrency = useCallback((newCurrency) => {
+  //   if (!newCurrency || typeof newCurrency !== "string") return;
+  //   const upper = newCurrency.toUpperCase();
+  //   setCurrencyState(upper);
+  //   if (typeof window !== "undefined") {
+  //     sessionStorage.setItem(CURRENCY_STORAGE_KEY, upper);
+  //     sessionStorage.setItem(CURRENCY_MANUAL_KEY, "true");
+  //     localStorage.removeItem(CURRENCY_STORAGE_KEY);
+  //     localStorage.removeItem(CURRENCY_MANUAL_KEY);
+  //   }
+  // }, []);
   const setCurrency = useCallback((newCurrency) => {
     if (!newCurrency || typeof newCurrency !== "string") return;
     const upper = newCurrency.toUpperCase();
     setCurrencyState(upper);
     if (typeof window !== "undefined") {
-      localStorage.setItem(CURRENCY_STORAGE_KEY, upper);
+      sessionStorage.setItem(CURRENCY_STORAGE_KEY, upper); // ✅ session
+      localStorage.removeItem(CURRENCY_STORAGE_KEY); // ✅ local clear
     }
   }, []);
 

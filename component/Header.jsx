@@ -60,7 +60,10 @@ export default function Header() {
   const isBookPackages = pathname.includes("book-packages");
   const isBlog = pathname.includes("/blog");
   const isAboutUs = pathname.includes("about-us");
-
+  // useEffect(() => {
+  //   sessionStorage.clear()
+  //   localStorage.clear()
+  // }, [])
   return (
     <>
       {/* ************************************************************************************************************ */}

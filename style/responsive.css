@@ -1211,7 +1211,13 @@
   .hotel_contact_info {
     align-items: center;
   }
-
+  .md_padding {
+    padding: 10px !important;
+    padding-bottom: 0px !important;
+  }
+  .compare > p {
+    margin: 0px !important;
+  }
   .hoteldetail_banner
     > .content
     > .hotel_contact_info
@@ -1637,6 +1643,7 @@
 
   .flight_price > p {
     font-size: 16px;
+    font-weight: 600 !important;
   }
 
   .acor_header > .full_det_item > .items_flights {
@@ -1869,7 +1876,17 @@
     min-height: 375px;
     height: 100%;
   }
-
+  .acot-tit > h2 {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .acor_header > .inner_tab_items > .img > img {
+    width: 25px;
+    height: 25px;
+  }
+  .acor_header > .items > .acot-tit > span {
+    font-size: 14px;
+  }
   .search_banner_box > .title > h1,
   .search_banner_box > .title > h2 {
     font-size: 35px;
