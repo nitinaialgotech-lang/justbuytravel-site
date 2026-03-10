@@ -239,7 +239,15 @@ export default function Flight_Return_Detail() {
                                                                         <Accordion.Header
                                                                             className="flight_accordian "
                                                                             onClick={() => {
-                                                                                (setShowText(true), setActiveKey(i));
+
+                                                                                setShowText(true)
+                                                                                if (activeKey === i) {
+                                                                                    setActiveKey(null)
+                                                                                }
+                                                                                else {
+                                                                                    setActiveKey(i)
+                                                                                }
+
                                                                             }}
                                                                         >
                                                                             <div className="acor_header  w-full">
@@ -516,7 +524,13 @@ export default function Flight_Return_Detail() {
                                                                         <Accordion.Header
                                                                             className="flight_accordian "
                                                                             onClick={() => {
-                                                                                (setShowText(true), setOtherActiveKey(index));
+                                                                                setShowText(true)
+                                                                                if (otherActiveKey === i) {
+                                                                                    setOtherActiveKey(null)
+                                                                                }
+                                                                                else {
+                                                                                    setOtherActiveKey(index)
+                                                                                }
                                                                             }}
                                                                         >
                                                                             <div className="acor_header  w-full">

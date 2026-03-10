@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState, useMemo } from "react";
+import "react-datepicker/dist/react-datepicker.css";
 import "../../../style/searchresult.css";
 import HotelDetailContent from "./HotelDetailContent";
 import { useQuery } from "@tanstack/react-query";
@@ -66,7 +67,6 @@ import { buildAffiliateLinkWithSubId } from "@/lib/tpLink";
 import { format, differenceInDays } from "date-fns";
 import { SlCalender } from "react-icons/sl";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { useRouter } from "next/navigation";
 import Search from "@/Components/HomePage/Search";
 import SearchTab from "@/component/SearchTab";

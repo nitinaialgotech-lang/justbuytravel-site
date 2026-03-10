@@ -357,7 +357,10 @@ p {
   width: 20px;
   height: 20px;
 }
-
+/* *********************** */
+.cursor-pointer > svg {
+  color: var(--bg-color);
+}
 /* (*********************************** */
 .suggestion_dropdown > li > a {
   text-decoration: none;
@@ -3179,6 +3182,7 @@ span.rating-stars {
 
 .blog_content .e-n-accordion-item {
   border-bottom: 1px solid #e7edf3;
+  position: relative;
 }
 
 .blog_content .e-n-accordion-item:last-child {
@@ -3194,6 +3198,9 @@ span.rating-stars {
   justify-content: space-between;
   gap: 12px;
   font-weight: 600;
+  user-select: none;
+  pointer-events: none;
+  /* disable click */
 }
 
 .blog_content summary::-webkit-details-marker {
@@ -3214,54 +3221,64 @@ span.rating-stars {
   width: 18px;
   height: 18px;
   fill: currentColor;
+  transition: transform 0.35s ease;
 }
 
+/* Region collapsed by default */
 .blog_content details > div[role="region"] {
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
   transition:
     grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.25s ease;
+    opacity 0.3s ease;
 }
 
 .blog_content details > div[role="region"] > * {
   overflow: hidden;
+  padding: 0 16px 0;
+  transition: padding 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* HOVER on the details item — opens content */
+.blog_content details:hover > div[role="region"],
+.blog_content details > div[role="region"]:hover {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.blog_content details:hover > div[role="region"] > *,
+.blog_content details > div[role="region"]:hover > * {
   padding: 0 16px 14px;
 }
 
+/* Background on hover */
 .blog_content details:hover,
 .blog_content details:has(div[role="region"]:hover) {
   background-color: #f6fbff;
 }
 
-.blog_content details:hover > div[role="region"],
-.blog_content details:has(div[role="region"]:hover) > div[role="region"] {
-  grid-template-rows: 1fr;
-  opacity: 1;
-}
-
-.blog_content details:hover .e-n-accordion-item-title-icon svg,
-.blog_content
-  details:has(div[role="region"]:hover)
-  .e-n-accordion-item-title-icon
-  svg {
-  transform: rotate(180deg);
-}
-
+/* Icon: plus shown by default, minus hidden */
 .blog_content .e-n-accordion-item-title-icon > .e-opened {
   display: none;
-  transform: rotate(180deg);
 }
 
+.blog_content .e-n-accordion-item-title-icon > .e-closed {
+  display: block;
+}
+
+/* Icon swap on hover */
 .blog_content details:hover .e-n-accordion-item-title-icon > .e-opened {
-  transform: rotate(180deg);
-  display: block !important;
+  display: block;
 }
 
-.blog_content details:hover .e-n-accordion-item-title-icon > .e-closed > svg {
-  transform: rotate(180deg);
+.blog_content details:hover .e-n-accordion-item-title-icon > .e-closed {
   display: none;
+}
+
+/* Icon rotate on hover */
+.blog_content details:hover .e-n-accordion-item-title-icon svg {
+  transform: rotate(180deg);
 }
 
 /* ************************************************************************************************************************* */

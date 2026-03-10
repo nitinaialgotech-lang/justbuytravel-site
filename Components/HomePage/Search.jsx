@@ -386,14 +386,14 @@ export default function TrySearch({ tabActive }) {
   // Handle selecting nearby or recent location (place-like object)
   const handleSelectNearbyOrRecent = (item) => {
     const place = {
-      displayName: { text: item.name },
-      formattedAddress: item.name,
-      location: { latitude: item.lat, longitude: item.long },
+      displayName: { text: item?.name },
+      formattedAddress: item?.name,
+      location: { latitude: item?.lat, longitude: item?.long },
     };
-    saveRecentSearch({ name: item.name, lat: item.lat, long: item.long });
+    saveRecentSearch({ name: item?.name, lat: item?.lat, long: item?.long });
     viewSearchAll(place);
     setShowDropdown(false);
-    setSearchContent(item.name);
+    setSearchContent(item?.name);
   };
 
   // Handle selecting a recently viewed hotel
@@ -662,7 +662,7 @@ relative
                           (
                             <>
                               <div className="cross mt-1 cursor-pointer" onClick={() => setIsSearchModalOpen(false)}>
-                                <ImCross />
+                                <ImCross className="bg_green" />
                               </div></>
                           ) :
                           ""
@@ -792,7 +792,7 @@ relative
                                       <FaHotel className="w-4 h-4" /> Recently
                                       viewed
                                     </div>
-                                    {recentlyViewed.map((item, idx) => (
+                                    {recentlyViewed.slice(0, 2).map((item, idx) => (
                                       <div
                                         key={`viewed-${item.id}-${idx}`}
                                         onMouseDown={(e) => {
@@ -898,12 +898,12 @@ relative
 
                                       <div className="flex-1 min-w-0">
                                         <div className="font-semibold text-gray-900 text-sm mb-1 truncate capitalize">
-                                          {place.autocomplete_suggestion ||
-                                            "Hotel"}
+                                          {place.autocomplete_suggestion || `${place?.displayName?.text}`
+                                          }
                                         </div>
                                         {place.formattedAddress || place?.location ? (
                                           <div className="text-gray-600 text-xs mb-2 line-clamp-1">
-                                            {place?.location}
+                                            {place.formattedAddress || `${place?.location?.latitude}, ${place?.location?.longitude}`}
                                           </div>
                                         ) : ""}
                                         {place.rating && (

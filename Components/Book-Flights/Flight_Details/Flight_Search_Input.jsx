@@ -849,22 +849,23 @@ export default function Flight_Search_Input({ Tabin }) {
                       {/* *********************** auto dropdown data for destination *********************** */}
                       {showToDropdown && (
                         <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-96 overflow-y-auto drop_in">
-                          {isLoadingTo && allAirPortsTO.length === 0 ? (
+                          {isLoadingTo ? (
                             <div className="px-4 py-3 text-center text-gray-500 text-sm">
                               Loading airports...
                             </div>
                           ) : allAirPortsTO.length > 0 ? (
-                            allAirPortsTO.map((airport, index) => (
+                            allAirPortsTO?.map((airport, index) => (
                               <button
                                 key={index}
                                 type="button"
                                 onMouseDown={(e) => {
                                   e.preventDefault();
+                                  setShow(false)
+                                  setShowToDropdown(false)
                                   setShowDropdown(false);
                                   setTo(airport.id);
                                   formik?.setFieldValue("To", airport.id);
                                   setShowFrom(false);
-                                  setShow(false)
 
                                 }}
                                 className="w-full text-left px-4 py-2 hover:bg-gray-50 cursor-pointer"

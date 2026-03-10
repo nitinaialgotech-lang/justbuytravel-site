@@ -225,22 +225,22 @@ export const RestaurantApi = async (text) => {
 }
 
 
-// export const autoComplete = async (text, limit = 10, mode = "all") => {
-//     return await https_places.get(`/search-suggest`, {
-//         params: {
-//             input: text,
-//             maxResultCount: limit,
-//             mode,
-//         },
-//     });
-// }
-export const autoComplete = async (text) => {
+export const autoComplete = async (text, limit = 10, mode = "all") => {
     return await https_places.get(`/search-suggest`, {
         params: {
             input: text,
+            maxResultCount: limit,
+            mode,
         },
     });
 }
+// export const autoComplete = async (text) => {
+//     return await https_places.get(`/search-suggest`, {
+//         params: {
+//             input: text,
+//         },
+//     });
+// }
 
 
 
