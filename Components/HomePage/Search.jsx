@@ -654,14 +654,14 @@ relative
                       </li>
                     </ul>
                     <div className="help_info flex gap-3 justify-center  ">
-                      <p className="flex items-center gap-2">
+                      {/* <p className="flex items-center gap-2">
                         <FaUser /> need some help ?
-                      </p>
+                      </p> */}
                       {
                         isSearchModalOpen ?
                           (
                             <>
-                              <div className="cross mt-1 cursor-pointer" onClick={() => setIsSearchModalOpen(false)}>
+                              <div className="cross me-1 cursor-pointer" onClick={() => setIsSearchModalOpen(false)}>
                                 <ImCross className="bg_green" />
                               </div></>
                           ) :

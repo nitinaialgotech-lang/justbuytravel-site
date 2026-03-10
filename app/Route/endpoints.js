@@ -241,9 +241,6 @@ export const autoComplete = async (text, limit = 10, mode = "all") => {
 //         },
 //     });
 // }
-
-
-
 export const nearbyPlaces = async (lat, lng, maxResultCount = 20, pageToken = null) => {
     const params = {
         latitude: lat,

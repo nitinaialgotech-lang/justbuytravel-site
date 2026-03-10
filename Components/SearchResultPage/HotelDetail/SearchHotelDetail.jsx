@@ -193,13 +193,14 @@ export default function SearchHotelDetail() {
 
     // Single date: use phase so first click after opening = check-in, second = check-out
     if (selectionPhaseRef.current === "end") {
-      // Second click = user chose check-out
       setEndDate(start);
       setSearchCheckin(format(startDate, "yyyy-MM-dd"));
       setSearchCheckout(format(start, "yyyy-MM-dd"));
       setCalendarOpen(false);
       return;
     }
+    // Second click = checkout
+
 
     // First click = user chose check-in
     selectionPhaseRef.current = "end";
@@ -216,6 +217,8 @@ export default function SearchHotelDetail() {
       setCalendarKey((prev) => prev + 1);
     }
   };
+
+  // ******************************
   const minSelectableDate =
     selectionPhaseRef.current === "start"
       ? new Date()
@@ -267,7 +270,7 @@ export default function SearchHotelDetail() {
       }
       return "ta_range_middle";
     }
-    if (endDate && date.toDateString() === endDate.toDateString())
+    if (selectionPhaseRef.current === "start" && endDate && date.toDateString() === endDate.toDateString())
       return "ta_range_end";
 
     return "";
@@ -1182,7 +1185,7 @@ export default function SearchHotelDetail() {
                             ));
                           })()}
                         </span>
-                        {HotelDetail?.rating} ({ratingCount} reviews )
+                        <span>  {HotelDetail?.rating} ({ratingCount} reviews )</span>
                       </p>
                       <ul className="flex p-0 m-0 hotel_botom_margin">
                         {/* <li>
@@ -1532,6 +1535,14 @@ export default function SearchHotelDetail() {
                           </div>
                         </div>
 
+
+
+
+
+
+
+
+
                         {calendarOpen && (
                           <div className="ta_premium_calendar_wrapper">
                             <DatePicker
@@ -1546,7 +1557,7 @@ export default function SearchHotelDetail() {
                               inline
                               openToDate={openToDate}
                               calendarClassName="ta_premium_calendar "
-
+                              focusSelectedMonth
                               onDayMouseEnter={(date) => {
                                 if (startDate && selectionPhaseRef.current === "end") setHoverDate(date);
                               }}
@@ -1584,18 +1595,6 @@ export default function SearchHotelDetail() {
                                 </div>
                               )}
                             />
-                            {/* <div className="ta_calendar_footer">
-                                                            {searchCheckin && !searchCheckout && (
-                                                                <span className="ta_calendar_hint">Select your check-out date</span>
-                                                            )}
-                                                            <button
-                                                                type="button"
-                                                                className="ta_calendar_apply_btn"
-                                                                onClick={() => setCalendarOpen(false)}
-                                                            >
-                                                                Apply dates
-                                                            </button>
-                                                        </div> */}
                           </div>
                         )}
                       </div>

@@ -19,7 +19,20 @@ export const CURRENCY_RATES = {
   INR: 83.12,
 };
 
-// Use internal API route to avoid CORS and "Failed to fetch" (proxies external FX APIs server-side)
+// ✅ Country → Currency mapping
+const COUNTRY_CURRENCY_MAP = {
+  IN: "INR",
+  US: "USD",
+  GB: "GBP",
+  AE: "AED",
+  SA: "SAR",
+  DE: "EUR",
+  FR: "EUR",
+  IT: "EUR",
+  ES: "EUR",
+  NL: "EUR",
+};
+
 const basePath =
   (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_BASE_PATH) || "";
 const FX_API_URL =
@@ -34,33 +47,46 @@ export const CURRENCY_LABELS = {
   INR: { symbol: "₹", code: "INR", name: "Indian Rupee" },
 };
 
-// Currencies we have explicit conversion rates for.
-// react-select-currency can return many more codes; for those we still
-// allow selection but treat the rate as 1:1 with USD.
 const SUPPORTED_RATE_CURRENCIES = Object.keys(CURRENCY_RATES);
 const DEFAULT_CURRENCY = "USD";
 
 const CurrencyContext = createContext(null);
-
-function getInitialCurrency() {
-  if (typeof window === "undefined") return DEFAULT_CURRENCY;
-  const stored = localStorage.getItem(CURRENCY_STORAGE_KEY);
-  if (typeof stored === "string" && stored.trim()) {
-    return stored.toUpperCase();
-  }
-  return DEFAULT_CURRENCY;
-}
 
 export function CurrencyProvider({ children }) {
   const [currency, setCurrencyState] = useState(DEFAULT_CURRENCY);
   const [rates, setRates] = useState(CURRENCY_RATES);
   const [ratesLastUpdated, setRatesLastUpdated] = useState(null);
 
+  // ✅ localStorage check karo, nahi toh country detect karo
   useEffect(() => {
-    setCurrencyState(getInitialCurrency());
+    sessionStorage.clear()
+    localStorage.clear()
+    if (typeof window === "undefined") return;
+
+    const stored = localStorage.getItem(CURRENCY_STORAGE_KEY);
+    if (stored && stored.trim()) {
+      setCurrencyState(stored.toUpperCase());
+      return;
+    }
+    async function detectCountry() {
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        const data = await res.json();
+        const countryCode = data?.country_code;
+        console.log("Detected country:", countryCode);
+        const detectedCurrency = COUNTRY_CURRENCY_MAP[countryCode];
+        if (detectedCurrency) {
+          setCurrencyState(detectedCurrency);
+        }
+      } catch (e) {
+        console.error("Country detect failed", e);
+      }
+    }
+
+    detectCountry();
   }, []);
 
-  // Fetch dynamic FX rates (with graceful fallback to static defaults)
+  // FX rates fetch
   useEffect(() => {
     let cancelled = false;
 
@@ -70,17 +96,10 @@ export function CurrencyProvider({ children }) {
         if (!res.ok) return;
         const json = await res.json();
         if (!json?.rates || typeof json.rates !== "object") return;
-
         if (cancelled) return;
-
-        // Merge server rates with our defaults so we always have at least the known ones
-        setRates((prev) => ({
-          ...prev,
-          ...json.rates,
-        }));
+        setRates((prev) => ({ ...prev, ...json.rates }));
         setRatesLastUpdated(json.date || new Date().toISOString());
       } catch (e) {
-        // eslint-disable-next-line no-console
         console.error("Failed to load FX rates, using static defaults", e);
       }
     }
@@ -107,7 +126,10 @@ export function CurrencyProvider({ children }) {
       const value = amountUsd * rate;
       const { symbol } = CURRENCY_LABELS[currency] ?? { symbol: currency };
       const { decimals = 2 } = options;
-      return `${symbol}${value.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}`;
+      return `${symbol}${value.toLocaleString(undefined, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })}`;
     },
     [currency, rates],
   );
@@ -127,7 +149,6 @@ export function CurrencyProvider({ children }) {
     convertFromUsd,
     rates,
     ratesLastUpdated,
-    // only the currencies we have real FX rates for
     supportedCurrencies: SUPPORTED_RATE_CURRENCIES,
     currencyLabels: CURRENCY_LABELS,
   };

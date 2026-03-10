@@ -264,7 +264,7 @@ export default function Booking_Option_Detail({ airlineName = "British Airways",
 
                             {/* Affiliate OTA links – always shown */}
                             <div className="px-4 md:px-6 py-4 border-b border-gray-100">
-                                <h3 className="text-base font-semibold text-gray-900 mb-3">Compare prices</h3>
+                                <h3 className="text-base font-semibold text-gray-900  mb-1">Compare prices</h3>
                                 <p className="text-xs text-gray-500 mb-3">* Prices are approximate and may change on the booking website.</p>
                                 {/* <div className="space-y-2">
                                     {affiliateOTAs.map((ota, idx) => (
@@ -572,18 +572,18 @@ export default function Booking_Option_Detail({ airlineName = "British Airways",
                                                             `}
                                                 >
                                                     <div className="flex items-center gap-3 min-w-0">
-                                                        {/* <span
-                                                                className={`flex items-center justify-center w-10 h-10 rounded-lg font-semibold text-lg `}
+                                                        <span
+                                                            className={`flex items-center justify-center w-30 h-10 rounded-lg font-semibold text-lg `}
 
-                                                            >
-                                                                <img src={ota?.logo} width={30} alt="" />
-                                                            </span> */}
-                                                        <div className="pt-text">
+                                                        >
+                                                            <img src={ota?.logo} width={100} alt="" />
+                                                        </span>
+                                                        {/* <div className="pt-text">
                                                             <p className="font-medium text-gray-900 m-0">
                                                                 Book with {ota.name}
                                                             </p>
 
-                                                        </div>
+                                                        </div> */}
                                                     </div>
                                                     <div className="flex items-center gap-3 shrink-0">
                                                         <div className="text-right pt_rice">

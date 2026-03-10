@@ -1110,6 +1110,7 @@
   text-decoration: none;
   color: var(--cl-brown);
   font-size: 16px;
+  font-weight: 600;
 }
 
 .hoteldetail_banner > .content > .hotel_contact_info > .price_hotel {
@@ -1697,10 +1698,12 @@
 
 .ta_premium_calendar .react-datepicker__day--keyboard-selected {
   /* background: var(--ta-accent) !important; */
-  color: #fff !important;
+  color: #000;
 }
 
-.ta_premium_calendar .react-datepicker__day--keyboard-selected,
+.ta_premium_calendar .react-datepicker__day--keyboard-selected {
+  background-color: transparent;
+}
 .ta_premium_calendar .react-datepicker__day--range-start,
 .ta_premium_calendar .react-datepicker__day--range-end {
   background-color: var(--bg-color);
@@ -1873,6 +1876,7 @@
 
   .ta_premium_calendar .react-datepicker__month-container:last-of-type {
     margin-bottom: 0;
+    padding: 0;
   }
 
   .ta_premium_calendar .react-datepicker__day-name,
@@ -2617,7 +2621,7 @@
 .explore_section.section_title h2,
 .nearbyhotels .serp_block_title {
   font-size: 32px;
-  font-weight: 600;
+  font-weight: 700;
   color: #1d1f27;
   margin: 0 0 5px;
   font-family: var(--font-fam);
@@ -3357,8 +3361,8 @@
 
 /* Optional: keyboard selected day */
 .ta_premium_calendar .react-datepicker__day--keyboard-selected {
-  background: var(--bg-color) !important;
-  color: #fff !important;
+  background: transparent;
+  color: #000;
 }
 .react-datepicker__day--outside-month.react-datepicker__day--in-range {
   background: transparent !important;
