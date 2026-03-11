@@ -24,6 +24,7 @@ import { GiSchoolBag } from "react-icons/gi";
 import { buildAffiliateLinks } from "@/lib/affiliateLinks";
 import Link from "next/link";
 import { getAssetPath } from "@/app/utils/assetPath";
+import { useCurrency } from "@/context/CurrencyContext";
 // Placeholder airline logo - replace with real logo URL from your API when available
 const BRITISH_AIRWAYS_LOGO = "";
 
@@ -101,7 +102,7 @@ export default function Booking_Option_Detail({ airlineName = "British Airways",
     const showLogo = airlineLogo && !logoError;
     const [showText, setShowText] = useState(false)
     const [activeKey, setActiveKey] = useState(null);
-
+    const { formatPrice, currency } = useCurrency();
     // **************************** api fo booking
 
     const type = useSelector((state) => state.user.type);
@@ -215,6 +216,21 @@ export default function Booking_Option_Detail({ airlineName = "British Airways",
             priceUsd: Math.round(basePrice * (1 + (l.priceOffset || 0))),
         }));
     }, [depForAffiliate, arrForAffiliate, outbound_date, return_date, adultsCount, childrenCountNum, infantCountNum, travelClass, type, lowestPrice, bookingOptions]);
+    // *******************************************
+    const formatSerpPrice = (priceValue) => {
+        if (priceValue == null) return null;
+        if (typeof priceValue === "number") return formatPrice(priceValue);
+        if (typeof priceValue === "string") {
+            const num = parseFloat(priceValue.replace(/[^0-9.]/g, ""));
+            return Number.isNaN(num) ? priceValue : formatPrice(num);
+        }
+        return priceValue;
+    };
+
+    const displayPrice = (p) => {
+        const n = Number(p);
+        return isNaN(n) ? 0 : formatSerpPrice(n);
+    };
     return (
         <section className="booking-options py-4">
             <div className="container">
@@ -253,7 +269,8 @@ export default function Booking_Option_Detail({ airlineName = "British Airways",
                                         type="button"
                                         className=" text-sm text-gray-500  hover:text-gray-700 transition-colors"
                                     >
-                                        <h2 className="m-0 p-0 text-black"> ${lowestPrice > 0 ? lowestPrice.toLocaleString() : "—"}</h2>
+                                        {/* <h2 className="m-0 p-0 text-black"> ${lowestPrice > 0 ? lowestPrice.toLocaleString() : "—"}</h2> */}
+                                        <h2 className="m-0 p-0 text-black">{lowestPrice > 0 ? displayPrice(lowestPrice) : "—"}</h2>
                                         <p className="m-0">Lowest total price ({totalPassengers} {totalPassengers !== 1 ? "passengers" : "passenger"})</p>
 
                                     </div>
@@ -380,9 +397,9 @@ export default function Booking_Option_Detail({ airlineName = "British Airways",
                                                                                         {lastFlight?.arrival_airport?.id}</p>
                                                                                 </div>
                                                                                 {/* ********* */}
-                                                                                <div className="stops acot-tit  tt-c dis_no">
+                                                                                {/* <div className="stops acot-tit  tt-c dis_no">
                                                                                     <span>nonstop</span>
-                                                                                </div>
+                                                                                </div> */}
                                                                                 {/* ******** weight */}
                                                                                 <div className="weigth acot-tit tt-c dis_no">
                                                                                     <span>
@@ -588,11 +605,9 @@ export default function Booking_Option_Detail({ airlineName = "British Airways",
                                                     <div className="flex items-center gap-3 shrink-0">
                                                         <div className="text-right pt_rice">
                                                             <span className="text-lg font-semibold text-gray-900  m-0">
-                                                                ${ota.priceUsd.toLocaleString()}
+                                                                {/* ${ota.priceUsd.toLocaleString()} */}
+                                                                {displayPrice(ota.priceUsd)}
                                                             </span>
-
-
-
                                                         </div>
                                                         <Link
                                                             href={ota.url}

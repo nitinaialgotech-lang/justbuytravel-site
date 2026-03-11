@@ -4,15 +4,19 @@ import React, { useState } from "react";
 import Flight_Search_Input from "./Flight_Search_Input";
 import { useSelector } from "react-redux";
 import moment from "moment";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { GetSerpBookingOptions } from "@/app/Route/endpoints";
 import { Accordion } from "react-bootstrap";
 import Link from "next/link";
 import { VscArrowSwap } from "react-icons/vsc";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import { useCurrency } from "@/context/CurrencyContext";
+
 
 export default function Flight_Return_Detail() {
-    // **************************** api fo booking
+    // **************************** api fo booking  const navigate = useRouter();
+    const navigate = useRouter();
     const departure_id = useSelector(
         (state) => state.user.SearchFlight.startfrom,
     );
@@ -23,6 +27,7 @@ export default function Flight_Return_Detail() {
     const arrival_id = useSelector((state) => state.user.SearchFlight.endto);
     //   ***********
     const [showText, setShowText] = useState(false);
+    const { formatPrice, currency } = useCurrency();
     const outbound_date = moment(start_date).format("YYYY-MM-DD");
     const return_date = moment(back_date).format("YYYY-MM-DD");
     const getData = useSearchParams();
@@ -146,13 +151,46 @@ export default function Flight_Return_Detail() {
             </div>
         );
     };
+    const formatSerpPrice = (priceValue) => {
+        if (priceValue == null) return null;
+        if (typeof priceValue === "number") return formatPrice(priceValue);
+        if (typeof priceValue === "string") {
+            const num = parseFloat(priceValue.replace(/[^0-9.]/g, ""));
+            return Number.isNaN(num) ? priceValue : formatPrice(num);
+        }
+        return priceValue;
+    };
+
+    const displayPrice = (p) => {
+        const n = Number(p);
+        return isNaN(n) ? 0 : formatSerpPrice(n);
+    };
+
+
+
+
+
+
+
+
+
     return (
         <>
-            <Flight_Search_Input />
-            <section className="booking-options py-4">
+            <section className="booking-options">
                 <div className="container">
+                    <div className="flight_sec search_container flight_mrg">
+
+                        <Flight_Search_Input />
+                    </div>
                     <div className="row justify-center">
                         <div className="col-lg-12">
+                            <div className="back_button pb-3 d-block d-lg-none ">
+                                <div className="back_to">
+                                    <div className="back flex items-center" onClick={() => navigate.back()}>
+                                        <span> <MdOutlineKeyboardArrowLeft /></span>  <span>back</span>
+                                    </div>
+                                </div>
+                            </div>
                             <div className="bg-white rounded card_rounded border border-gray-200  overflow-hidden">
                                 {/* Section header */}
                                 <div className=" px-3 py-2 border-b border-gray-100 ">
@@ -349,12 +387,9 @@ export default function Flight_Return_Detail() {
                                                                                             </div>
                                                                                             {/* *********************** */}
                                                                                             <div className="flight_price">
-                                                                                                <p className="m-0 font-semibold ">
-                                                                                                    $
-                                                                                                    {(
-                                                                                                        (item?.price || 0) *
-                                                                                                        adultsCount
-                                                                                                    ).toLocaleString()}
+                                                                                                <p className="m-0 fw-semibold ">
+
+                                                                                                    {displayPrice((item?.price || 0) * adultsCount)}
                                                                                                 </p>
                                                                                                 <p className="m-0">
                                                                                                     {item?.type}
@@ -629,12 +664,13 @@ export default function Flight_Return_Detail() {
                                                                                             </div>
                                                                                             {/* *********************** */}
                                                                                             <div className="flight_price">
-                                                                                                <p className="m-0 font-semibold ">
-                                                                                                    $
-                                                                                                    {(
+                                                                                                <p className="m-0 fw-semibold ">
+
+                                                                                                    {displayPrice((item?.price || 0) * adultsCount)}
+                                                                                                    {/* {(
                                                                                                         (item?.price || 0) *
                                                                                                         adultsCount
-                                                                                                    ).toLocaleString()}
+                                                                                                    ).toLocaleString()} */}
                                                                                                 </p>
                                                                                                 <p className="m-0">
                                                                                                     {item?.type}

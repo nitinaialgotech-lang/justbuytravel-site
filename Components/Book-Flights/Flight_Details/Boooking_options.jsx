@@ -19,10 +19,13 @@ import { VscArrowSwap } from "react-icons/vsc";
 import { Accordion } from "react-bootstrap";
 import Link from "next/link";
 import { SetFlightType } from "@/Components/Redux/Reducer";
+import { useCurrency } from "@/context/CurrencyContext";
 
 
 
 export default function Boooking_options() {
+
+  const { formatPrice, currency } = useCurrency();
   const [showText, setShowText] = useState(false)
   const [activeKey, setActiveKey] = useState(null);
   const [flightResult, setFlightResults] = useState([])
@@ -128,6 +131,20 @@ export default function Boooking_options() {
   };
 
   console.log(travelType, "ughiougiouguio");
+  const formatSerpPrice = (priceValue) => {
+    if (priceValue == null) return null;
+    if (typeof priceValue === "number") return formatPrice(priceValue);
+    if (typeof priceValue === "string") {
+      const num = parseFloat(priceValue.replace(/[^0-9.]/g, ""));
+      return Number.isNaN(num) ? priceValue : formatPrice(num);
+    }
+    return priceValue;
+  };
+
+  const displayPrice = (p) => {
+    const n = Number(p);
+    return isNaN(n) ? 0 : formatSerpPrice(n);
+  };
 
 
   return (
@@ -301,8 +318,8 @@ export default function Boooking_options() {
                                             </div>
                                             {/* *********************** */}
                                             <div className="flight_price">
-                                              <p className="m-0 font-semibold ">
-                                                ${((item?.price || 0) * adultsCount).toLocaleString()}
+                                              <p className="m-0 fw-semibold ">
+                                                {displayPrice((item?.price || 0) * adultsCount)}
                                               </p>
                                               <p className="m-0">
                                                 {item?.type}

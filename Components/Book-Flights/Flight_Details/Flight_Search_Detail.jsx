@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import Link from "next/link";
+import { useCurrency } from "@/context/CurrencyContext";
 
 /** =========================
  *  Expedia Affiliate Helpers
@@ -166,6 +167,7 @@ function getExpediaAffiliateUrl({
 export default function Flight_Search_Detail() {
   const [flights, setFlights] = useState("");
   const engine = "google_flights";
+  const { formatPrice, currency } = useCurrency();
 
   const searchTriggered = useSelector((state) => state.user.searchTriggered);
   const departure_id = useSelector(
@@ -284,11 +286,7 @@ export default function Flight_Search_Detail() {
   const hasSearched =
     searchTriggered && departure_id && arrival_id && outbound_date;
 
-  // Flight search API returns total price when adults is passed - no multiplication needed
-  const displayPrice = (p) => {
-    const n = Number(p);
-    return isNaN(n) ? 0 : n;
-  };
+
 
   // Pre-build affiliate URL once (same for all cards)
   const expediaAffiliateUrl = getExpediaAffiliateUrl({
@@ -304,7 +302,19 @@ export default function Flight_Search_Detail() {
   });
 
   console.log(flight, "flightttttttttttttttttttttttttttttttttttttttttttttt");
-
+  const formatSerpPrice = (priceValue) => {
+    if (priceValue == null) return null;
+    if (typeof priceValue === "number") return formatPrice(priceValue);
+    if (typeof priceValue === "string") {
+      const num = parseFloat(priceValue.replace(/[^0-9.]/g, ""));
+      return Number.isNaN(num) ? priceValue : formatPrice(num);
+    }
+    return priceValue;
+  };
+  const displayPrice = (p) => {
+    const n = Number(p);
+    return isNaN(n) ? 0 : formatSerpPrice(n);
+  };
   return (
     <section className="py-2">
       <div className="container">
@@ -436,7 +446,7 @@ export default function Flight_Search_Detail() {
                                   From
                                 </div>
                                 <div className="price text-xl md:text-2xl font-semibold  leading-tight fw-bold">
-                                  $
+
                                   {displayPrice(
                                     item?.price ||
                                     data?.data?.flights?.price_insights
@@ -518,7 +528,7 @@ export default function Flight_Search_Detail() {
                                 From
                               </div>
                               <div className="price text-xl md:text-2xl font-semibold  leading-tight fw-bold">
-                                $
+
                                 {displayPrice(
                                   item?.price ||
                                   data?.data?.flights?.price_insights
@@ -695,7 +705,7 @@ export default function Flight_Search_Detail() {
                                     From
                                   </div>
                                   <div className="price text-xl md:text-2xl font-semibold  leading-tight fw-bold">
-                                    $
+
                                     {displayPrice(
                                       item?.price ||
                                       data?.data?.flights?.price_insights
@@ -774,7 +784,7 @@ export default function Flight_Search_Detail() {
                                   From
                                 </div>
                                 <div className="price text-xl md:text-2xl font-semibold  leading-tight fw-bold">
-                                  $
+
                                   {displayPrice(
                                     item?.price ||
                                     data?.data?.flights?.price_insights

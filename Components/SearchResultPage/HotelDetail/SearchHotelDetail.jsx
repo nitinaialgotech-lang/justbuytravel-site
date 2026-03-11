@@ -177,7 +177,7 @@ export default function SearchHotelDetail() {
     const start = Array.isArray(value) ? value[0] : value;
     const end = Array.isArray(value) ? value[1] : null;
     if (!start) return;
-
+    setHoverDate(null)
     const nextDay = new Date(start);
     nextDay.setDate(nextDay.getDate() + 1);
 
@@ -234,7 +234,6 @@ export default function SearchHotelDetail() {
   //   const end = startDate < hoverDate ? hoverDate : startDate;
   //   return date >= start && date <= end;
   // };
-
   // Day class logic
   // const dayClassName = (date) => {
   //   if (!date) return "";
@@ -1472,7 +1471,7 @@ export default function SearchHotelDetail() {
                                 e.stopPropagation();
                                 setCalendarOpen(true);
                                 selectionPhaseRef.current = "start"; // 👈 start select
-                                // 👇 show selected check-in month
+
                                 if (startDate) {
                                   setOpenToDate(startDate);
                                   setCalendarKey((prev) => prev + 1);
@@ -1544,7 +1543,7 @@ export default function SearchHotelDetail() {
 
 
                         {calendarOpen && (
-                          <div className="ta_premium_calendar_wrapper">
+                          <div className="ta_premium_calendar_wrapper" onMouseLeave={() => setHoverDate(null)}>
                             <DatePicker
                               key={calendarKey}
                               selected={startDate}
@@ -1561,6 +1560,7 @@ export default function SearchHotelDetail() {
                               onDayMouseEnter={(date) => {
                                 if (startDate && selectionPhaseRef.current === "end") setHoverDate(date);
                               }}
+                              onMouseLeave={() => setHoverDate(null)}
                               dayClassName={dayClassName}
                               onDayMouseLeave={() => setHoverDate(null)}
                               renderCustomHeader={({
