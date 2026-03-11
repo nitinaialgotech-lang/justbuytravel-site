@@ -9,6 +9,23 @@ import {
 } from '@/app/utils/seo';
 import "../../style/responsive.css";
 
+const RESERVED_STATIC_SEGMENTS = new Set([
+    'about-us',
+    'blog',
+    'blogs',
+    'book-cruises',
+    'book-packages',
+    'contact-us',
+    'desclimer',
+    'flights',
+    'hotels',
+    'my-favorite-travel-resources',
+    'privacy-policy',
+    'search',
+    'term-and-conditions',
+    'view-all-hotels',
+]);
+
 // Pre-render a placeholder; allow all other [hotel] slugs at request time (avoids 404 for place slugs like /london-eye-ChIJ...).
 export async function generateStaticParams() {
     return [{ hotel: "placeholder" }];
@@ -19,6 +36,13 @@ export async function generateMetadata({ params }) {
     try {
         // Await params in Next.js 15+
         const resolvedParams = await params;
+        const slug = (resolvedParams?.hotel || '').toLowerCase();
+        if (RESERVED_STATIC_SEGMENTS.has(slug)) {
+            return {
+                title: 'Not Found',
+                robots: { index: false, follow: false },
+            };
+        }
         const hotelId = getHotelIdFromSlug(resolvedParams?.hotel);
         if (!hotelId) {
             return {
@@ -51,6 +75,9 @@ export default async function HotelDetailPage({ params }) {
     try {
         const resolvedParams = await params;
         const slug = resolvedParams?.hotel;
+        if (RESERVED_STATIC_SEGMENTS.has((slug || '').toLowerCase())) {
+            notFound();
+        }
         const hotelId = getHotelIdFromSlug(slug);
 
         // Only 404 when the URL is not a valid hotel slug (no place ID)

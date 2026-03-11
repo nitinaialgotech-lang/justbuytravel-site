@@ -65,10 +65,16 @@ export const Get_All_Blog_Posts_For_Static = async () => {
 // }
 
 
-export const Get_Blog_data = async (id, page) => {
+export const Get_Blog_data = async (id, page, searchText = "") => {
+    const q = (searchText || "").trim();
     if (!id) {
         // Fetch All Posts
-        const response = await https_blog.get(`/posts?page=${page}`);
+        const response = await https_blog.get(`/posts`, {
+            params: {
+                page,
+                ...(q ? { search: q } : {}),
+            },
+        });
         return {
             posts: response.data,
             totalPosts: Number(response.headers["x-wp-total"]),
@@ -77,7 +83,13 @@ export const Get_Blog_data = async (id, page) => {
     }
 
     // Fetch by Category
-    const response = await https_blog.get(`/posts?categories=${id}`);
+    const response = await https_blog.get(`/posts`, {
+        params: {
+            categories: id,
+            page,
+            ...(q ? { search: q } : {}),
+        },
+    });
     return {
         posts: response.data,
         totalPosts: Number(response.headers["x-wp-total"]),

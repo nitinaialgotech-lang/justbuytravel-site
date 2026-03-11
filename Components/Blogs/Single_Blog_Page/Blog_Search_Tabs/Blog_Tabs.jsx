@@ -18,6 +18,7 @@ export default function Blog_Tabs() {
   const blogRef = useRef(null);
   const searchParams = useSearchParams();
   const categorySlugFromUrl = searchParams.get("category");
+  const searchTermFromUrl = (searchParams.get("q") || "").trim();
   const [expandedId, setExpandedId] = useState(null);
   const [activeKey, setActiveKey] = useState("showall"); // default tab
 
@@ -43,8 +44,8 @@ export default function Blog_Tabs() {
   const categoryId = activeKey === "showall" ? null : Number(activeKey);
 
   const { data: blog_data, isLoading } = useQuery({
-    queryKey: ["blog_data", categoryId, count],
-    queryFn: () => Get_Blog_data(categoryId, count),
+    queryKey: ["blog_data", categoryId, count, searchTermFromUrl],
+    queryFn: () => Get_Blog_data(categoryId, count, searchTermFromUrl),
     enabled: true,
     keepPreviousData: true,
   });
@@ -115,6 +116,18 @@ export default function Blog_Tabs() {
   };
 
   const TotalPages = blog_data?.totalPages || 0;
+  const posts = blog_data?.posts || [];
+  const normalizedSearch = searchTermFromUrl.toLowerCase();
+  const shouldApplySearch = normalizedSearch && activeKey !== "showall";
+  const filteredPosts = shouldApplySearch
+    ? posts.filter((post) => {
+        const title = (post?.title?.rendered || "").replace(/<[^>]*>/g, "");
+        const excerpt = (post?.excerpt?.rendered || "").replace(/<[^>]*>/g, "");
+        const content = (post?.content?.rendered || "").replace(/<[^>]*>/g, "");
+        const haystack = `${title} ${excerpt} ${content}`.toLowerCase();
+        return haystack.includes(normalizedSearch);
+      })
+    : posts;
 
   // **********************************************
   // Helper to get dynamic author name + image
@@ -169,7 +182,7 @@ export default function Blog_Tabs() {
                         ? Array.from({ length: 6 }).map((_, i) => (
                             <BlogShimmerCard key={i} />
                           ))
-                        : blog_data?.posts?.slice(0, 9)?.map((item) => {
+                        : filteredPosts?.slice(0, 9)?.map((item) => {
                             const rawText =
                               item.excerpt.rendered?.replace(/<[^>]*>/g, "") ||
                               "";
@@ -268,6 +281,13 @@ export default function Blog_Tabs() {
                               </div>
                             );
                           })}
+                      {!isLoading && filteredPosts.length === 0 && (
+                        <div className="col-12">
+                          <p className="text-center m-0 py-4">
+                            No blog results found.
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </Tab>
                   {/* ************************** ********************************************************************************************/}
@@ -290,7 +310,7 @@ export default function Blog_Tabs() {
                                 ? Array.from({ length: 6 }).map((_, i) => (
                                     <BlogShimmerCard key={i} />
                                   ))
-                                : blog_data?.posts?.map((post) => {
+                                : filteredPosts?.map((post) => {
                                     const date_it = post?.date;
                                     const formatted =
                                       moment(date_it).format("MMMM D, YYYY");
@@ -376,6 +396,13 @@ export default function Blog_Tabs() {
                                       </div>
                                     );
                                   })}
+                              {!isLoading && filteredPosts.length === 0 && (
+                                <div className="col-12">
+                                  <p className="text-center m-0 py-4">
+                                    No blog results found.
+                                  </p>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </Tab>

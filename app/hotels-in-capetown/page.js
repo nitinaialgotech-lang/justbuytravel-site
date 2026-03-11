@@ -16,7 +16,7 @@ export const metadata = {
         type: "website",
     },
     alternates: {
-        canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://justbuytravel.com/hotels-in-capetown',
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://justbuytravel.com'}/hotels-in-capetown`,
     },
     robots: { index: false, follow: false },
 };

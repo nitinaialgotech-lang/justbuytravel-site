@@ -14,7 +14,7 @@ export const metadata = {
         type: "website",
     },
     alternates: {
-        canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://justbuytravel.com/hotels-in-bali',
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://justbuytravel.com'}/hotels-in-bali`,
     },
     robots: { index: false, follow: false },
 };

@@ -7,7 +7,7 @@ export default function robots() {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
+        allow: ['/', '/api/fx-rates'],
         disallow: ['/api/', '/admin/'],
       },
     ],

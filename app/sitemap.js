@@ -50,12 +50,6 @@ export default async function sitemap() {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/my-favorite-travel-resources`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
       url: `${baseUrl}/desclimer`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
@@ -76,12 +70,6 @@ export default async function sitemap() {
     // Country / city hotel landing pages
     {
       url: `${baseUrl}/hotels-in-uk`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/hotels-in-usa`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.6,
@@ -152,24 +140,6 @@ export default async function sitemap() {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
-    {
-      url: `${baseUrl}/hotels-in-singapore`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/hotels-in-sydney`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/hotels-in-tokyo`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
   ];
 
 
@@ -211,9 +181,13 @@ export default async function sitemap() {
     console.error('Error fetching blogs for sitemap:', error);
   }
 
-  return [
-    ...staticPages,
-    ...blogPages,
-  ];
+  // Keep sitemap focused on indexable pages only and remove duplicate URLs.
+  const allPages = [...staticPages, ...blogPages];
+  const seen = new Set();
+  return allPages.filter((entry) => {
+    if (!entry?.url || seen.has(entry.url)) return false;
+    seen.add(entry.url);
+    return true;
+  });
 }
 

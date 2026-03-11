@@ -6,6 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import ReduxProvider from "./ReduxProvider";
 
+export const dynamic = 'force-dynamic';
+
 const metadata = {
   title: "Just Buy Travel",
   description: "Just Buy Travel is a travel agency that helps you find the best hotels and flights for your trip.",
