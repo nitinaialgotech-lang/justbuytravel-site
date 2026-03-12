@@ -326,6 +326,9 @@
 
 /* ************************************************************************************************************************ */
 @media only screen and (max-width: 767px) {
+  .currency {
+    font-weight: 650;
+  }
   /* *************** */
   .footer_bottom_link {
     background-position: 50% 40%;
@@ -749,9 +752,11 @@
 
   .blog_banner_box > .title > h1,
   .blog_banner_box > .title > h2 {
-    font-size: 40px;
+    font-size: 32px;
   }
-
+  .blog_content h2 {
+    font-size: 28px !important;
+  }
   .blog_section_left_bar > .breadcrumb > h4 {
     display: none;
   }
@@ -1665,7 +1670,12 @@
   }
 
   .flight_search_button > button {
-    padding: 6px 30px;
+    padding: 8px 30px;
+    font-size: 14px;
+  }
+  .font_cross {
+    font-size: 14px;
+    padding: 7px 20px;
   }
 
   .flight_detail_section {
@@ -1689,6 +1699,8 @@
   .cross_btn > button {
     margin-bottom: -10px;
     text-align: end;
+    border: none;
+    color: var(--bg-color);
   }
 
   /* *********** */

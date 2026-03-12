@@ -464,7 +464,7 @@ export default function Flight_Search_Input({ Tabin }) {
   console.log(range, "range..............................");
   return (
     <section
-      className={`flight_detail_section  ${pathname !== "/" ? "padding_bottom" : ""} ${pathname === "/flights" ? "padding_t20" : ""} ${Tabin === "flights" ? "padding_t20 pb-0" : ""} `}
+      className={`flight_detail_section   ${pathname === "/flights" ? "padding_t20" : ""} ${Tabin === "flights" ? "padding_t20 pb-0" : ""} `}
     >
       <div className="container mx-auto md-p0 p-0 ">
         <div
@@ -1132,7 +1132,7 @@ export default function Flight_Search_Input({ Tabin }) {
                 </div>
                 {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
                 {/* *********************** DATE SECTION *********************** */}
-                <div className="header_input relative h-12" ref={calendarRef}>
+                <div className="header_input relative h-12 date_width" ref={calendarRef}>
                   <div className="icon absolute inset-y-0 start-3 flex items-center pointer-events-none">
                     <SlCalender />
                   </div>

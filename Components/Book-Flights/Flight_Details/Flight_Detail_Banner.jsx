@@ -1,6 +1,5 @@
 import React from 'react'
 import Flight_Departure from '../Flight_Departure'
-import Flight_Search_Input from './Flight_Search_Input'
 import Flight_Search_Detail from './Flight_Search_Detail'
 
 export default function Flight_Detail_Banner() {
@@ -28,7 +27,7 @@ export default function Flight_Detail_Banner() {
                     </div>
                 </div>
             </section>
-            <Flight_Search_Input />
+
             <Flight_Search_Detail />
 
         </>

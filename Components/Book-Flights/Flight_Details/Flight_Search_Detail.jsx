@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import Link from "next/link";
 import { useCurrency } from "@/context/CurrencyContext";
+import Flight_Search_Input from "./Flight_Search_Input";
 
 /** =========================
  *  Expedia Affiliate Helpers
@@ -318,6 +319,9 @@ export default function Flight_Search_Detail() {
   return (
     <section className="py-2">
       <div className="container">
+        <div className="flight_sec search_container flight_mrg">
+          <Flight_Search_Input />
+        </div>
         <div className="row justify-center departure_chart_section padding_b30 pb-6">
           <div className="col-lg-12 space-y-5">
             {/* Search summary header */}

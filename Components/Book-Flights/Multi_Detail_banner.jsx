@@ -1,6 +1,5 @@
 import React from 'react'
 import Boooking_options from './Flight_Details/Boooking_options'
-import Flight_Search_Input from './Flight_Details/Flight_Search_Input'
 
 export default function Multi_Detail_banner() {
     return (
@@ -26,7 +25,6 @@ export default function Multi_Detail_banner() {
                     </div>
                 </div>
             </section>
-            <Flight_Search_Input />
             <Boooking_options />
 
         </>

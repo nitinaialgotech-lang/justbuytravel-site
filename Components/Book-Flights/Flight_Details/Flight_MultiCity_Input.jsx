@@ -555,6 +555,18 @@ export default function Flight_MultiCity_Input() {
                   className={`header_input_item header_multiple_input flex flex-col ${formik?.errors?.flights ? "pb-4" : "pb-3"} md:flex-row gap-3 md:gap-4`}
                   key={index}
                 >
+                  {index > 1 && (
+                    <div className="flex cross_btn items-center justify-end ms-auto">
+                      <button
+                        className="btn p-0"
+                        type="button"
+                        onClick={() => removeInput(index)}
+                        aria-label="Remove flight"
+                      >
+                        <RxCross2 />
+                      </button>
+                    </div>
+                  )}
                   {/* *********************************** */}
                   <div className="header_input_1 header_in2 relative flex flex-1 gap-2">
                     <div className="header_input header_inpu relative h-12">
@@ -978,18 +990,7 @@ export default function Flight_MultiCity_Input() {
                       )}
                   </div>
                   {/* Remove leg - right side on mobile */}
-                  {index > 1 && (
-                    <div className="flex cross_btn items-center justify-end ms-auto">
-                      <button
-                        className="btn p-0"
-                        type="button"
-                        onClick={() => removeInput(index)}
-                        aria-label="Remove flight"
-                      >
-                        <RxCross2 />
-                      </button>
-                    </div>
-                  )}
+
                 </div>
               </div>
             </React.Fragment>

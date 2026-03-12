@@ -57,6 +57,74 @@ const nextConfig = {
       { source: "/book-hotels-online/hotels-in-dubai", destination: "/hotels-in-dubai", permanent: true },
       { source: "/book-hotel/glasgow/page/1", destination: "/hotels-in-glasgow", permanent: true },
       { source: "/book-hotel/singapore/page/1", destination: "/hotels-in-singapore", permanent: true },
+
+      { source: "/book-hotel/glasgow/page/30", destination: "/hotels-in-glasgow", permanent: true },
+      { source: "/book-flights-/london/page/25", destination: "/flights", permanent: true },
+      { source: "/book-flights/london/page/16", destination: "/flights", permanent: true },
+      { source: "/book-flights-/london/page/2", destination: "/flights", permanent: true },
+
+
+      // { source: "/?blog_post_page=38", destination: "/blog", permanent: true },
+      { source: "/book-hotel/glasgow/page/43", destination: "/hotels-in-glasgow", permanent: true },
+      { source: "/book-hotel/contact/page/35", destination: "/contact-us", permanent: true },
+      { source: "/book-flights-/london/page/41", destination: "/flights", permanent: true },
+
+      { source: "/book-flights/new-york-to-london", destination: "/flights", permanent: true },
+      { source: "/top-travel-packages", destination: "/book-packages", permanent: true },
+
+
+      // { source: "/?blog_post_page=1", destination: "/blog", permanent: true },
+      { source: "/exclusive-luxury-hotel-deals-discounts-find-with-justbuytravel-today", destination: "/hotels", permanent: true },
+      { source: "/why-dubai-should-be-your-next-destination-how-to-find-cheap-flights-online", destination: "/flights", permanent: true },
+
+      { source: "/2025/06/16", destination: "/", permanent: true },
+      { source: "/contact/page/44", destination: "/contact-us", permanent: true },
+      { source: "/book-flights/london/page/22", destination: "/flights", permanent: true },
+      { source: "/book-flights/new-york", destination: "/flights", permanent: true },
+      { source: "/book-hotel/new-york/page/2", destination: "/hotels-in-new-york", permanent: true },
+      { source: "/book-hotel/liverpool", destination: "/hotels", permanent: true },
+      { source: "/contact/page/26", destination: "/contact-us", permanent: true },
+      { source: "/contact/page/22", destination: "/contact-us", permanent: true },
+      { source: "/book-flights/paris/page/29", destination: "/flights", permanent: true },
+      { source: "/book-flights/paris/page/30", destination: "/flights", permanent: true },
+      { source: "/book-flights/paris/page/27", destination: "/flights", permanent: true },
+      { source: "/book-hotel/tokyo/page/10", destination: "/hotels-in-tokyo", permanent: true },
+      { source: "/book-hotel/tokyo/page/28", destination: "/hotels-in-tokyo", permanent: true },
+      { source: "/book-hotel/tokyo/page/32", destination: "/hotels-in-tokyo", permanent: true },
+      { source: "/book-hotel/tokyo/page/29/", destination: "/hotels-in-tokyo", permanent: true },
+      { source: "/book-hotel/tokyo/page/24", destination: "/hotels-in-tokyo", permanent: true },
+      { source: "/book-hotel/tokyo/page/13", destination: "/hotels-in-tokyo", permanent: true },
+
+
+      { source: "/book-hotel/tokyo/page/30", destination: "/hotels-in-tokyo", permanent: true },
+      { source: "/book-hotel/tokyo/page/11", destination: "/hotels-in-tokyo", permanent: true },
+      { source: "/book-flights/dubai/page/27", destination: "/flights", permanent: true },
+      { source: "/book-flights/dubai/page/26", destination: "/flights", permanent: true },
+      { source: "/book-flights/paris/page/42", destination: "/flights", permanent: true },
+      { source: "/book-flights/paris/page/39", destination: "/flights", permanent: true },
+      { source: "/contact/page/35", destination: "/contact-us", permanent: true },
+      { source: "/contact/page/39", destination: "/contact-us", permanent: true },
+      { source: "/book-flights/paris/page/4", destination: "/flights", permanent: true },
+      { source: "/contact/page/2", destination: "/contact-us", permanent: true },
+
+
+      // { source: "/?blog_post_page=2", destination: "/blog", permanent: true },
+      {
+        source: '/',
+        has: [{ type: 'query', key: 'blog_post_page' }],
+        destination: '/blog',
+        permanent: true,
+      },
+      { source: "/book-flights/paris/page/6", destination: "/flights", permanent: true },
+      { source: "/book-flights/paris/page/3", destination: "/flights", permanent: true },
+      { source: "/contact/page/42", destination: "/contact-us", permanent: true },
+      { source: "/contact/page/6", destination: "/contact-us", permanent: true },
+      { source: "/cdn-cgi/l/email-protection", destination: "/", permanent: true },
+      { source: "/book-hotels-online", destination: "/hotels", permanent: true },
+
+
+
+
     ];
   },
 }

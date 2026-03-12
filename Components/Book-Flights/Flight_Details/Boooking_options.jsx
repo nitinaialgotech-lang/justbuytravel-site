@@ -20,6 +20,7 @@ import { Accordion } from "react-bootstrap";
 import Link from "next/link";
 import { SetFlightType } from "@/Components/Redux/Reducer";
 import { useCurrency } from "@/context/CurrencyContext";
+import Flight_Search_Input from "./Flight_Search_Input";
 
 
 
@@ -148,8 +149,12 @@ export default function Boooking_options() {
 
 
   return (
-    <section className="booking-options py-4">
+    <section className="booking-options pb-5">
       <div className="container">
+        <div className="flight_sec search_container flight_mrg">
+
+          <Flight_Search_Input />
+        </div>
         <div className="row justify-center">
           <div className="col-lg-12">
             <div className="bg-white rounded card_rounded border border-gray-200  overflow-hidden">
@@ -235,11 +240,23 @@ export default function Boooking_options() {
 
 
                             return (
-                              <React.Fragment key={i}>
-                                <Accordion.Item eventKey={i}>
+                              <>
+                                <Accordion.Item eventKey={i} key={i}>
                                   <Accordion.Header
                                     className="flight_accordian "
-                                    onClick={() => { setShowText(true), setActiveKey(i) }}
+                                    // onClick={() => { setShowText(true), setActiveKey(i) }}
+                                    onClick={() => {
+
+                                      setShowText(true)
+                                      if (activeKey === i) {
+                                        setActiveKey(null)
+                                      }
+                                      else {
+                                        setActiveKey(i)
+                                      }
+
+                                    }
+                                    }
                                   >
                                     <div className="acor_header  w-full">
                                       {activeKey !== i ? (
@@ -428,7 +445,7 @@ export default function Boooking_options() {
 
 
                                 </Accordion.Item>
-                              </React.Fragment>
+                              </>
                             )
                           }))
                       }

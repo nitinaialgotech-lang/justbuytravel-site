@@ -14,7 +14,7 @@ const metadata = {
   keywords: "travel, hotels, flights, packages, deals, discounts, travel agency, travel booking, travel planning",
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "48x48", type: "image/ico"  },
+      { url: "/favicon.ico", sizes: "48x48", type: "image/ico" },
       { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
       { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
     ],
@@ -89,6 +89,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+        <link rel="preload" href="/fonts/Gilroy-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/Gilroy-Bold.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/Gilroy-SemiBold.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/Gilroy-Black.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
 
         {/* Travelpayout Tech Solutions: Content Analytics, LinkSwitcher, Emerald */}
         {/* Place first so it loads faster. Get script URL from: Travelpayouts → AI tools → your Project → Install & Activate */}
@@ -132,9 +136,11 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`antialiased`}
       >
-
+        {/* <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      > */}
         <ReduxProvider>
           {children}
         </ReduxProvider>

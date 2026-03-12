@@ -11,12 +11,12 @@ import {
     IoCheckmarkCircle,
     IoDocumentTextOutline,
 } from "react-icons/io5";
-import { MdEventSeat } from "react-icons/md";
+import { MdEventSeat, MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { FaSuitcase } from "react-icons/fa6";
 import { useQuery } from "@tanstack/react-query";
 import { GetSerpBookingOptions } from "@/app/Route/endpoints";
 import { useSelector } from "react-redux";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import moment from "moment";
 import { VscArrowSwap } from "react-icons/vsc";
 import { Accordion } from "react-bootstrap";
@@ -231,10 +231,18 @@ export default function Booking_Option_Detail({ airlineName = "British Airways",
         const n = Number(p);
         return isNaN(n) ? 0 : formatSerpPrice(n);
     };
+    const navigate = useRouter()
     return (
         <section className="booking-options py-4">
             <div className="container">
                 <div className="row justify-center">
+                    <div className="back_button pb-3 d-block d-lg-none ">
+                        <div className="back_to">
+                            <div className="back flex items-center" onClick={() => navigate.back()}>
+                                <span> <MdOutlineKeyboardArrowLeft /></span>  <span>back</span>
+                            </div>
+                        </div>
+                    </div>
                     <div className="col-lg-12">
                         <div className="bg-white rounded card_rounded border border-gray-200  overflow-hidden">
                             {/* Section header */}
