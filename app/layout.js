@@ -93,6 +93,7 @@ export default function RootLayout({ children }) {
         <link rel="preload" href="/fonts/Gilroy-Bold.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/Gilroy-SemiBold.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/Gilroy-Black.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <meta name="msvalidate.01" content="B4F829067BFD2025B044EFFA10053BAF" />
 
         {/* Travelpayout Tech Solutions: Content Analytics, LinkSwitcher, Emerald */}
         {/* Place first so it loads faster. Get script URL from: Travelpayouts → AI tools → your Project → Install & Activate */}

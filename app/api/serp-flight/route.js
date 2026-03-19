@@ -55,6 +55,8 @@ async function handleRequest(req) {
       adults = 1,
       children = 0,
       infants_on_lap = 0,
+      deep_search = true,
+      show_hidden = true,
       currency = "USD",
       country = "us",
       language = "en",
@@ -102,6 +104,8 @@ async function handleRequest(req) {
       travel_class,
       adults,
       api_key: SERP_API_KEY,
+      deep_search: true,
+      show_hidden: true
     };
     if (Number(children) > 0) baseParams.children = Number(children);
     if (Number(infants_on_lap) > 0) baseParams.infants_on_lap = Number(infants_on_lap);
@@ -151,6 +155,8 @@ async function handleRequest(req) {
         travel_class,
         adults,
         flights,
+        deep_search,
+        show_hidden
       },
       { status: 200, headers: corsHeaders }
     );
@@ -175,11 +181,11 @@ async function handleRequest(req) {
     const debug =
       status === 500 && !respData
         ? {
-            name: err?.name || null,
-            message: err?.message || null,
-            stack: err?.stack || null,
-            toString: err ? String(err) : null,
-          }
+          name: err?.name || null,
+          message: err?.message || null,
+          stack: err?.stack || null,
+          toString: err ? String(err) : null,
+        }
         : null;
 
     return NextResponse.json(

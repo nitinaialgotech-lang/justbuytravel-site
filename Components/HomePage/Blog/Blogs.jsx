@@ -87,9 +87,9 @@ export default function Blogs() {
                             data?.posts?.slice(1, 5).map((item, i) => {
                                 const limitWords = (text, limit) => {
                                     if (!text) return "";
-                                    const words = text.split(" ");
+                                    const words = text.split("");
                                     return words.length > limit
-                                        ? words.slice(0, limit).join(" ") + " ..."
+                                        ? words.slice(0, limit).join("") + " ..."
                                         : text;
                                 };
                                 return (
@@ -99,12 +99,12 @@ export default function Blogs() {
                                         <div className="blog_box">
                                             <div className="blog_img relative ">
                                                 <img src={item?.yoast_head_json?.og_image?.map((item) => item?.url)} className='card_rounded' alt={item?.title?.rendered || "Travel blog post image"} />
-                                                {/* <div className="inner_content absolute top-6 left-4">
+                                                {/* <div className="inner_content absolute top-6 left-4"
                                                     Top Rated
                                                 </div> */}
                                                 <div className="content mt-2">
                                                     <Link href={getBlogHref(item)}>
-                                                        {limitWords(item?.title?.rendered, 11)}
+                                                        {limitWords(item?.title?.rendered, 50)}
                                                     </Link>
                                                 </div>
                                             </div>

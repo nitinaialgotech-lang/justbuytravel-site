@@ -321,6 +321,8 @@ export const GetSerpFlights = async ({
     type = "1",
     travel_class = 1,
     adults = 1,
+    deep_search = true,
+    show_hidden = true,
     children = 0,
     infants_on_lap = 0,
 }) => {
@@ -332,6 +334,8 @@ export const GetSerpFlights = async ({
         return_date,
         currency,
         type,
+        deep_search,
+        show_hidden,
         travel_class,
         adults,
     };

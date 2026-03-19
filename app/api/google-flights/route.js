@@ -63,7 +63,8 @@ export async function POST(req) {
       max_price: body?.max_price,
       outbound_times: body?.outbound_times,
       return_times: body?.return_times,
-      deep_search: body?.deep_search,
+      deep_search: true,
+      show_hidden: true
     };
 
     // remove undefined keys

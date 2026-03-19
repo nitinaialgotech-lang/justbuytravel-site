@@ -10,7 +10,7 @@
     url("/fonts/Gilroy-BlackItalic.woff") format("woff");
   font-weight: 900;
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -20,7 +20,7 @@
     url("/fonts/Gilroy-ExtraBoldItalic.woff") format("woff");
   font-weight: bold;
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -30,7 +30,7 @@
     url("/fonts/Gilroy-Black.woff") format("woff");
   font-weight: 900;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -40,7 +40,7 @@
     url("/fonts/Gilroy-Bold.woff") format("woff");
   font-weight: bold;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -50,7 +50,7 @@
     url("/fonts/Gilroy-BoldItalic.woff") format("woff");
   font-weight: bold;
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -60,7 +60,7 @@
     url("/fonts/Gilroy-ExtraBold.woff") format("woff");
   font-weight: bold;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -70,7 +70,7 @@
     url("/fonts/Gilroy-HeavyItalic.woff") format("woff");
   font-weight: 900;
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -80,7 +80,7 @@
     url("/fonts/Gilroy-Light.woff") format("woff");
   font-weight: 300;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -90,7 +90,7 @@
     url("/fonts/Gilroy-Heavy.woff") format("woff");
   font-weight: 900;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -100,7 +100,7 @@
     url("/fonts/Gilroy-MediumItalic.woff") format("woff");
   font-weight: 500;
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -110,7 +110,7 @@
     url("/fonts/Gilroy-Medium.woff") format("woff");
   font-weight: 500;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -120,7 +120,7 @@
     url("/fonts/Gilroy-LightItalic.woff") format("woff");
   font-weight: 300;
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -130,7 +130,7 @@
     url("/fonts/Gilroy-SemiBold.woff") format("woff");
   font-weight: 600;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -140,7 +140,7 @@
     url("/fonts/Gilroy-SemiBoldItalic.woff") format("woff");
   font-weight: 600;
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -150,7 +150,7 @@
     url("/fonts/Gilroy-Thin.woff") format("woff");
   font-weight: 100;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -160,7 +160,7 @@
     url("/fonts/Gilroy-RegularItalic.woff") format("woff");
   font-weight: normal;
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -170,7 +170,7 @@
     url("/fonts/Gilroy-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -180,7 +180,7 @@
     url("/fonts/Gilroy-ThinItalic.woff") format("woff");
   font-weight: 100;
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -190,7 +190,7 @@
     url("/fonts/Gilroy-UltraLight.woff") format("woff");
   font-weight: 200;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
 @font-face {
@@ -200,7 +200,7 @@
     url("/fonts/Gilroy-UltraLightItalic.woff") format("woff");
   font-weight: 200;
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
 }
 
 :root {
@@ -243,7 +243,15 @@ body {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(6px);
 }
+.transform-top {
+  transform: translate(0px, -40%) !important;
+  transition: transform 0.3s ease;
+}
 
+.transform-bottom {
+  transform: translate(0px, 0%) !important;
+  transition: transform 0.3s ease;
+}
 .page-loader-spinner {
   width: 42px;
   height: 42px;
@@ -966,7 +974,7 @@ p {
   transform: translateY(0);
 }
 
-/* Optional: slower & smoother */
+/* swap: slower & smoother */
 .swiper-slide-active .slide-text {
   transition-duration: 1.2s;
 }
@@ -3471,7 +3479,7 @@ span.rating-stars {
 }
 
 .policies_pages ul {
-  list-style: square;
+  list-style: disc;
   padding: 0 20px;
 }
 
@@ -3606,6 +3614,7 @@ span.rating-stars {
   > .elementor-widget-container
   > ul {
   padding-left: 20px !important;
+  font-family: var(--font-fam);
 }
 
 .blog_content img {
@@ -3620,12 +3629,15 @@ span.rating-stars {
   > .elementor-widget-container
   > ul
   > li {
-  list-style: square;
+  list-style: disc;
+  font-family: var(--font-fam);
+  font-size: 18px;
 }
 
 .blog_content h3 {
   font-size: 30px !important;
   font-weight: 700 !important;
+  font-family: var(--font-fam);
   line-height: 1 !important;
 }
 .blog_content h3 > b {
@@ -3634,16 +3646,19 @@ span.rating-stars {
 .blog_content h2 {
   font-size: 40px !important;
   font-weight: 700 !important;
+  font-family: var(--font-fam);
   line-height: 1 !important;
 }
 .blog_content ul li {
-  list-style: square;
+  list-style: disc;
+  font-size: 18px;
 }
 .blog_content ol li {
-  list-style: square;
+  list-style: disc;
+  font-family: var(--font-fam);
 }
 .blog_content p {
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
   font-size: 18px;
 }
 
@@ -3656,14 +3671,14 @@ span.rating-stars {
   > ul
   > li
   > p {
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
   font-size: 18px;
 }
-.icon {
+/* .icon {
   .icon {
     width: 40px;
     height: 40px;
-    background-color: red; /* yahi color icon ka banega */
+    background-color: red; 
 
     -webkit-mask: url("/header_icon/header/log1.svg") no-repeat center;
     mask: url("/header_icon/header/log1.svg") no-repeat center;
@@ -3671,7 +3686,7 @@ span.rating-stars {
     -webkit-mask-size: contain;
     mask-size: contain;
   }
-}
+} */
 .blog_content
   > .elementor
   > .elementor-element
@@ -3680,6 +3695,7 @@ span.rating-stars {
   > .elementor-widget-container
   > p
   > b {
+  font-family: var(--font-fam);
   font-weight: bold !important;
   font-size: 18px;
 }
@@ -3716,14 +3732,6 @@ span.rating-stars {
   > span
   > a {
   color: var(--bg-color);
-}
-
-.blog_content
-  > .elementor
-  > .elementor-element
-  > .elementor-element
-  > .elementor-widget-container
-  > img {
 }
 
 .blog_content

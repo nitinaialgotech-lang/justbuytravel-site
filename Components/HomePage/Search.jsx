@@ -1,7 +1,8 @@
+
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { FaHotel, FaUser } from "react-icons/fa";
+import React, { useEffect, useState, useRef, useCallback, use } from "react";
+import { FaBed, FaHotel, FaUser } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -11,6 +12,7 @@ import {
   searchHotel,
   SearchLocation,
 } from "@/app/Route/endpoints";
+import { ImCross } from "react-icons/im";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
@@ -31,7 +33,8 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MdHistory } from "react-icons/md";
 import { getRecentlyViewedProperties } from "@/app/utils/recentlyViewed";
 import { set } from "date-fns";
-
+import { Button, Modal } from "react-bootstrap";
+import { IoIosArrowBack } from "react-icons/io";
 const RECENT_SEARCHES_KEY = "justbuytravel_recent_searches";
 const MAX_RECENT_SEARCHES = 5;
 
@@ -57,7 +60,7 @@ function saveRecentSearch(item) {
   localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
 }
 
-export default function Backup_Search({ tabActive }) {
+export default function TrySearch({ tabActive }) {
   console.log(tabActive, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
 
   // **************************************************************************************
@@ -274,7 +277,7 @@ export default function Backup_Search({ tabActive }) {
           searchContent && searchContent.trim().length > 0
             ? searchContent
             : "hotel";
-        return autoComplete(queryText, 10, "all");
+        return autoComplete(queryText);
       }
       // Hotels tab: hotel-focused suggestions
       if (searchType === "hotels" || activeTab === "hotels") {
@@ -304,7 +307,6 @@ export default function Backup_Search({ tabActive }) {
         setShowDropdown(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -319,9 +321,10 @@ export default function Backup_Search({ tabActive }) {
     const isEmptyFocusSuggestions = showDefaultOnFocus && !searchContent.trim();
     if (hasTypedResults || isEmptyFocusSuggestions) {
       setShowDropdown(true);
-    } else {
-      setShowDropdown(false);
     }
+    // else {
+    //     setShowDropdown(false);
+    // }
   }, [autoCompleteData, searchContent, showDefaultOnFocus]);
 
   const handleInputChange = (e) => {
@@ -331,7 +334,8 @@ export default function Backup_Search({ tabActive }) {
     if (value.length > 0 && showDefaultOnFocus) {
       setShowDefaultOnFocus(false);
     }
-    setShowDropdown(value.length > 0);
+    // setShowDropdown(value.length > 0);
+    setShowDropdown(true);
     setSelectedIndex(-1);
   };
 
@@ -382,14 +386,14 @@ export default function Backup_Search({ tabActive }) {
   // Handle selecting nearby or recent location (place-like object)
   const handleSelectNearbyOrRecent = (item) => {
     const place = {
-      displayName: { text: item.name },
-      formattedAddress: item.name,
-      location: { latitude: item.lat, longitude: item.long },
+      displayName: { text: item?.name },
+      formattedAddress: item?.name,
+      location: { latitude: item?.lat, longitude: item?.long },
     };
-    saveRecentSearch({ name: item.name, lat: item.lat, long: item.long });
+    saveRecentSearch({ name: item?.name, lat: item?.lat, long: item?.long });
     viewSearchAll(place);
     setShowDropdown(false);
-    setSearchContent(item.name);
+    setSearchContent(item?.name);
   };
 
   // Handle selecting a recently viewed hotel
@@ -431,7 +435,10 @@ export default function Backup_Search({ tabActive }) {
 
   // Extract places from response - handle both direct response and nested data
   const places =
-    autoCompleteData?.data?.places || autoCompleteData?.places || [];
+    autoCompleteData?.data?.places ||
+    autoCompleteData?.places ||
+    autoCompleteData?.data?.suggestions ||
+    [];
 
   // Navigate to search page: show hotels and details for city/region/country
   const viewSearchAll = (place) => {
@@ -439,6 +446,7 @@ export default function Backup_Search({ tabActive }) {
     const long = place?.location?.longitude ?? "";
     const placeName =
       place?.displayName?.text || place?.formattedAddress || place?.name || "";
+    getCleanCityOrDistrict(place);
     const types = place?.types || [];
     const isCountry = types.includes("country");
     const isLargeRegion = types.includes("administrative_area_level_1");
@@ -452,6 +460,47 @@ export default function Backup_Search({ tabActive }) {
     if (isCountry || isLargeRegion) params.set("type", "region");
     router.push(`/search?${params.toString()}`);
   };
+  // *************************** try yyyyyyyyyyyyyyyy
+  const getCleanCityOrDistrict = (place) => {
+    const components = place?.addressComponents || [];
+
+    const find = (type) => components.find((c) => c.types?.includes(type));
+
+    // 1️⃣ First preference → Locality (actual city name like Mohali)
+    const locality = find("locality");
+
+    if (locality?.longText) {
+      return locality.longText;
+    }
+
+    // 2️⃣ Second preference → District
+    const district =
+      find("administrative_area_level_2") ||
+      find("administrative_area_level_3");
+
+    if (district?.longText) {
+      return district.longText;
+    }
+
+    // 3️⃣ Fallback → State
+    const state = find("administrative_area_level_1");
+    if (state?.longText) {
+      return state.longText;
+    }
+    console.log(
+      place?.displayName?.text,
+      "pllllllllllwwwwwwwwwwwwwwwwwwweeeeeeeeeeeee",
+    );
+
+    // 4️⃣ Last fallback
+    return place?.displayName?.text || "";
+  };
+
+  console.log(
+    autoCompleteData,
+    "sssssssssssssssuuuuuuuuuuuuuuuuuuuggggggggggeeeeeeeeeeeeeetttttttt",
+  );
+
   // **************************** hotel search
 
   const ViewHotels = (id, name, place) => {
@@ -468,7 +517,11 @@ export default function Backup_Search({ tabActive }) {
 
   console.log(pathname, "pkpkkpkp");
   const isDetailPage = pathname.includes("ChIJ");
+  const isClosingRef = useRef(false);
   // ********************************** open flight on hotel details page on click the flight tab
+  // *************************************
+  // **************************** nmobile show modal
+  const [showMobilDrop, setMobileDrop] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   useEffect(() => {
     if (isSearchModalOpen) {
@@ -482,14 +535,24 @@ export default function Backup_Search({ tabActive }) {
     };
   }, [isSearchModalOpen]);
 
+  useEffect(() => {
+    console.log(
+      "showDropdown:",
+      showDropdown,
+      searchContent,
+      "pkpkpkpkk",
+      places,
+    );
+  }, [showDropdown, searchContent]);
   return (
     <>
       {isSearchModalOpen && (
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm  transition-opacity duration-300  backdrop"
-          onClick={() => setIsSearchModalOpen(false)}
-        ></div>
-      )}
+          onClick={() => { isClosingRef.current = true; setIsSearchModalOpen(false), setShowDropdown(false) }}
+        ></div >
+      )
+      }
 
       <section
         className={`Search_section  ${isBookFlightsPage ? "padding_topf50 padding_b70" : "padding_bottom"} ${isDetailPage ? "pb-0" : ""}`}
@@ -498,15 +561,50 @@ export default function Backup_Search({ tabActive }) {
           <div
             className={`
 ${isSearchModalOpen
-                ? "relative    z-50 bg-white shadow-2xl p-6 rounded-2xl search_container input_backdrop "
-                : `${isBookHotelsPage ? "searchhotelcontainer" : "search_container"}`
+                ? "relative    z-50 bg-white shadow-2xl p-6 rounded-2xl search_container input_backdrop  transform-top "
+                : `${isBookHotelsPage ? "searchhotelcontainer" : "search_container"}  `
               }
 ${pathname === "/flights" ? "no-shadow p-0" : ""}
 ${isDetailPage ? "no-shadow pt-0 ps-0 pe-0" : ""}
+${isDetailPage && isSearchModalOpen ? "pt-3 ps-3 pe-3" : ""}
 relative
 `}
           >
             <div className={`search_container_box  rounded-2xl  w-full `}>
+              {
+                pathname !== "/" ?
+                  <div className="help_info flex gap-3 justify-end mb-2 text-end ">
+                    {
+                      isSearchModalOpen ?
+                        (
+                          <>
+                            <div className="cross me-1 cursor-pointer"
+                              // onMouseDown={(e) => {
+                              //   e.preventDefault();
+                              //   isClosingRef.current = true;
+                              //   setIsSearchModalOpen(false);
+                              //   setShowDropdown(false);
+                              //   setShowDefaultOnFocus(false);
+                              //   setTimeout(() => { isClosingRef.current = false; }, 200);
+                              // }}
+
+                              onMouseDown={(e) => {
+                                e.preventDefault();
+                                isClosingRef.current = true;
+                                setIsSearchModalOpen(false);
+                                setShowDropdown(false);
+                                setShowDefaultOnFocus(false);
+                                setTimeout(() => { isClosingRef.current = false; }, 300);
+                              }}
+                            >
+                              <ImCross className="bg_green" />
+                            </div></>
+                        ) :
+                        ""
+                    }
+                  </div>
+                  : ""
+              }
               {!isBookFlightsPage && !isBookHotelsPage && !isDetailPage ? (
                 <div className="search_tab">
                   <div className="tab_link flex justify-between items-center">
@@ -592,11 +690,31 @@ relative
                         </Link>
                       </li>
                     </ul>
-                    <div className="help_info">
-                      <p className="flex items-center gap-2">
+                    <div className="help_info flex gap-3 justify-center  ">
+                      {/* <p className="flex items-center gap-2">
                         <FaUser /> need some help ?
-                      </p>
+                      </p> */}
+                      {
+                        isSearchModalOpen ?
+                          (
+                            <>
+                              <div className="cross me-1 cursor-pointer"
+                                onMouseDown={(e) => {
+                                  e.preventDefault(); // yeh sirf focus rokta hai
+                                  setIsSearchModalOpen(false);
+                                  setShowDropdown(false);
+                                  setShowDefaultOnFocus(false);
+                                }}
+
+
+                              >
+                                <ImCross className="bg_green" />
+                              </div></>
+                          ) :
+                          ""
+                      }
                     </div>
+
                   </div>
                 </div>
               ) : (
@@ -630,15 +748,14 @@ relative
                           value={searchContent}
                           onChange={handleInputChange}
                           onKeyDown={handleKeyDown}
+                          onClick={() => setIsSearchModalOpen(true)}
                           onFocus={() => {
                             setIsSearchModalOpen(true);
-                            // When focusing with an empty input, trigger default
-                            // suggestions (Nearby, Recent, Popular) like TripAdvisor
                             if (!searchContent.trim()) {
                               setShowDefaultOnFocus(true);
                               fetchNearbyLocation();
                             }
-                            if (places.length > 0) setShowDropdown(true);
+                            setShowDropdown(true);
                           }}
                           className="block w-full bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:outline-none focus:ring-0 placeholder:text-body ps-12 capitalize"
                           placeholder={
@@ -918,7 +1035,7 @@ relative
               </div>
               {/* **************************************** edning */}
 
-              {/*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx **********************************xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx on mobile vooiw show form  */}
+              {/*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx **********************************xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx on mobile veiw show form  */}
               <div
                 className={`${searchType === "flights" || isBookFlightsPage ? "p-0" : ""} mobile_search_box  d-block d-lg-none`}
               >
@@ -940,221 +1057,304 @@ relative
                         type="text"
                         ref={inputRef}
                         value={searchContent}
-                        onChange={handleInputChange}
+                        readOnly
+                        // onChange={handleInputChange}
                         onKeyDown={handleKeyDown}
+                        onClick={() => setMobileDrop(true)}
+
                         onFocus={() => {
-                          setIsSearchModalOpen(true);
                           if (!searchContent.trim()) {
+                            if (isClosingRef.current) return;
                             setShowDefaultOnFocus(true);
                             fetchNearbyLocation();
                           }
                           if (places.length > 0) setShowDropdown(true);
                         }}
+
                         className="block relative w-full bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:outline-none focus:ring-0 placeholder:text-body"
                         placeholder={textContent || "Search places and hotels"}
                       />
-
-                      {/* **************** */}
-                      {showDropdown && (
-                        <div
-                          ref={dropdownRef}
-                          className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-96 overflow-y-auto"
-                        >
-                          {/* Nearby & Recent on mobile */}
-                          {!searchContent.trim() && showDefaultOnFocus && (
-                            <div className="border-b border-gray-100">
-                              {nearbyLocation && (
-                                <div
-                                  onClick={() =>
-                                    handleSelectNearbyOrRecent(nearbyLocation)
+                      {/* ****************** Show mobile dropdown >>> */}
+                      <Modal
+                        show={showMobilDrop}
+                        onHide={() => setMobileDrop(false)}
+                        fullscreen
+                      >
+                        {/* <Modal.Header closeButton>
+                                                    <Modal.Title>Leaving From </Modal.Title>
+                                                </Modal.Header> */}
+                        <Modal.Body>
+                          <div className="    mobile_search_box2 relative">
+                            <form
+                              onSubmit={(e) => {
+                                e.preventDefault();
+                                const trimmed = searchContent.trim();
+                                if (trimmed.length === 0) return;
+                                // Add your search navigation logic here
+                              }}
+                            >
+                              <input
+                                type="text"
+                                ref={inputRef}
+                                value={searchContent}
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                                onClick={() => setMobileDrop(true)}
+                                onFocus={() => {
+                                  if (!searchContent.trim()) {
+                                    setShowDefaultOnFocus(true);
+                                    fetchNearbyLocation();
                                   }
-                                  className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50"
+                                  if (places.length > 0) setShowDropdown(true);
+                                }}
+                                className="block relative w-full bg-neutral-secondary-medium  border-default-medium text-heading text-sm rounded-base focus:outline-none focus:ring-0 placeholder:text-body"
+                                placeholder={
+                                  textContent || "Search places and hotels"
+                                }
+                              />
+                              {/* ****************** Show mobile dropdown >>> */}
+
+                              {/* **************** */}
+                              {showDropdown && (
+                                <div
+                                  ref={dropdownRef}
+                                  className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl mobile_drop_height overflow-y-auto"
                                 >
-                                  <div className="shrink-0 w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                                    <HiOutlineLocationMarker className="w-5 h-5 text-blue-600" />
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <div className="text-xs font-medium text-gray-500 uppercase">
-                                      Nearby
-                                    </div>
-                                    <div className="font-medium text-gray-900">
-                                      {nearbyLocation.name}
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                              {recentSearches.length > 0 && (
-                                <div className="px-4 py-2">
-                                  <div className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase mb-2">
-                                    <MdHistory className="w-4 h-4" /> Recent
-                                    searches
-                                  </div>
-                                  {recentSearches.map((item, idx) => (
-                                    <div
-                                      key={`recent-m-${item.name}-${idx}`}
-                                      onClick={() =>
-                                        handleSelectNearbyOrRecent(item)
-                                      }
-                                      className="flex items-center gap-3 py-2.5 cursor-pointer hover:bg-gray-50 rounded-lg px-2 -mx-2"
-                                    >
-                                      <HiOutlineLocationMarker className="w-4 h-4 text-gray-400 shrink-0" />
-                                      <span className="text-sm text-gray-900 truncate">
-                                        {item.name}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                              {recentlyViewed.length > 0 && (
-                                <div className="px-4 py-2">
-                                  <div className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase mb-2">
-                                    <FaHotel className="w-4 h-4" /> Recently
-                                    viewed
-                                  </div>
-                                  {recentlyViewed.map((item, idx) => (
-                                    <div
-                                      key={`viewed-m-${item.id}-${idx}`}
-                                      onClick={() =>
-                                        handleSelectRecentlyViewed(item)
-                                      }
-                                      className="flex items-center gap-3 py-2.5 cursor-pointer hover:bg-gray-50 rounded-lg px-2 -mx-2"
-                                    >
-                                      <FaHotel className="w-4 h-4 text-gray-400 shrink-0" />
-                                      <div className="flex-1 min-w-0">
-                                        <span className="text-sm text-gray-900 truncate block">
-                                          {item.name}
-                                        </span>
-                                        {item.address && (
-                                          <span className="text-xs text-gray-500 truncate block">
-                                            {item.address}
-                                          </span>
-                                        )}
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          )}
-                          {isLoading &&
-                            !searchContent.trim() &&
-                            !nearbyLocation &&
-                            recentSearches.length === 0 &&
-                            recentlyViewed.length === 0 ? (
-                            <div className="px-4 py-6 text-center text-gray-500 text-sm">
-                              <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900 mr-2"></div>
-                              Loading suggestions...
-                            </div>
-                          ) : places.length > 0 ? (
-                            <>
-                              {!searchContent.trim() &&
-                                showDefaultOnFocus &&
-                                (nearbyLocation ||
-                                  recentSearches.length > 0 ||
-                                  recentlyViewed.length > 0) && (
-                                  <div className="px-4 py-2 border-b border-gray-100">
-                                    <div className="text-xs font-medium text-gray-500 uppercase">
-                                      Popular
-                                    </div>
-                                  </div>
-                                )}
-                              {places.map((place, index) => {
-                                const placeId = place.id || `place-${index}`;
-
-                                const photoUrl = getPhotoUrl(place);
-                                const hasImageError = imageErrors[placeId];
-                                const displayImage =
-                                  getPlacePhotoUrl(place) ||
-                                  (photoUrl && !hasImageError
-                                    ? photoUrl
-                                    : "https://via.placeholder.com/120x120/f3f4f6/9ca3af?text=Hotel");
-
-                                return (
-                                  <div
-                                    key={placeId}
-                                    onClick={() => handleSelectPlace(place)}
-                                    onMouseEnter={() => setSelectedIndex(index)}
-                                    className={`flex items-center gap-3 px-3 py-2 cursor-pointer transition-all duration-200 ${selectedIndex === index
-                                      ? "bg-blue-50 border-l-4 border-blue-500"
-                                      : "hover:bg-gray-50 border-l-4 border-transparent "
-                                      }`}
-                                  >
-                                    {/* Hotel Image */}
-                                    <div className="shrink-0">
-                                      <div className="w-15 h-15 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center relative">
-                                        {imageLoading[placeId] && (
-                                          <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+                                  {/* Nearby & Recent on mobile */}
+                                  {!searchContent.trim() &&
+                                    showDefaultOnFocus && (
+                                      <div className="border-b border-gray-100">
+                                        {nearbyLocation && (
+                                          <div
+                                            onClick={() =>
+                                              handleSelectNearbyOrRecent(
+                                                nearbyLocation,
+                                              )
+                                            }
+                                            className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50"
+                                          >
+                                            <div className="shrink-0 w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
+                                              <HiOutlineLocationMarker className="w-5 h-5 text-blue-600" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                              <div className="text-xs font-medium text-gray-500 uppercase">
+                                                Nearby
+                                              </div>
+                                              <div className="font-medium text-gray-900">
+                                                {nearbyLocation.name}
+                                              </div>
+                                            </div>
                                           </div>
                                         )}
-                                        <img
-                                          src={displayImage}
-                                          alt={
-                                            place.displayName?.text || "Hotel"
-                                          }
-                                          className={`w-full h-full object-cover transition-opacity duration-200 ${imageLoading[placeId]
-                                            ? "opacity-0"
-                                            : "opacity-100"
-                                            }`}
-                                          onLoadStart={() =>
-                                            handleImageLoadStart(placeId)
-                                          }
-                                          onLoad={() =>
-                                            handleImageLoad(placeId)
-                                          }
-                                          onError={(e) =>
-                                            handleImageError(placeId, e)
-                                          }
-                                          loading="lazy"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    {/* Hotel Info */}
-                                    <div className="flex-1 min-w-0">
-                                      <div className="font-semibold text-gray-900 text-sm mb-1 truncate">
-                                        {place.displayName?.text || "Hotel"}
-                                      </div>
-                                      {place.formattedAddress && (
-                                        <div className="text-gray-600 text-xs mb-2 line-clamp-1">
-                                          {place.formattedAddress}
-                                        </div>
-                                      )}
-                                      {place.rating && (
-                                        <div className="flex items-center gap-2">
-                                          <div className="flex items-center gap-1">
-                                            <svg
-                                              className="w-4 h-4 text-yellow-400 fill-current"
-                                              viewBox="0 0 20 20"
-                                            >
-                                              <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                                            </svg>
-                                            <span className="text-gray-800 text-xs font-medium">
-                                              {place.rating.toFixed(1)}
-                                            </span>
+                                        {recentSearches.length > 0 && (
+                                          <div className="px-4 py-2">
+                                            <div className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase mb-2">
+                                              <MdHistory className="w-4 h-4" />{" "}
+                                              Recent searches
+                                            </div>
+                                            {recentSearches.map((item, idx) => (
+                                              <div
+                                                key={`recent-m-${item.name}-${idx}`}
+                                                onClick={() =>
+                                                  handleSelectNearbyOrRecent(
+                                                    item,
+                                                  )
+                                                }
+                                                className="flex items-center gap-3 py-2.5 cursor-pointer hover:bg-gray-50 rounded-lg px-2 -mx-2"
+                                              >
+                                                <HiOutlineLocationMarker className="w-4 h-4 text-gray-400 shrink-0" />
+                                                <span className="text-sm text-gray-900 truncate">
+                                                  {item.name}
+                                                </span>
+                                              </div>
+                                            ))}
                                           </div>
-                                          {place.userRatingCount && (
-                                            <span className="text-gray-500 text-xs">
-                                              (
-                                              {place.userRatingCount.toLocaleString()}{" "}
-                                              reviews)
-                                            </span>
-                                          )}
-                                          {place.priceLevel !== undefined && (
-                                            <span className="text-gray-500 text-xs ml-2">
-                                              {place.priceLevel === 0
-                                                ? "Free"
-                                                : "$".repeat(place.priceLevel)}
-                                            </span>
-                                          )}
-                                        </div>
-                                      )}
+                                        )}
+                                        {recentlyViewed.length > 0 && (
+                                          <div className="px-4 py-2">
+                                            <div className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase mb-2">
+                                              <FaHotel className="w-4 h-4" />{" "}
+                                              Recently viewed
+                                            </div>
+                                            {recentlyViewed.map((item, idx) => (
+                                              <div
+                                                key={`viewed-m-${item.id}-${idx}`}
+                                                onClick={() =>
+                                                  handleSelectRecentlyViewed(
+                                                    item,
+                                                  )
+                                                }
+                                                className="flex items-center gap-3 py-2.5 cursor-pointer hover:bg-gray-50 rounded-lg px-2 -mx-2"
+                                              >
+                                                <FaHotel className="w-4 h-4 text-gray-400 shrink-0" />
+                                                <div className="flex-1 min-w-0">
+                                                  <span className="text-sm text-gray-900 truncate block">
+                                                    {item.name}
+                                                  </span>
+                                                  {item.address && (
+                                                    <span className="text-xs text-gray-500 truncate block">
+                                                      {item.address}
+                                                    </span>
+                                                  )}
+                                                </div>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+                                  {isLoading &&
+                                    !searchContent.trim() &&
+                                    !nearbyLocation &&
+                                    recentSearches.length === 0 &&
+                                    recentlyViewed.length === 0 ? (
+                                    <div className="px-4 py-6 text-center text-gray-500 text-sm">
+                                      <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900 mr-2"></div>
+                                      Loading suggestions...
                                     </div>
+                                  ) : places.length > 0 ? (
+                                    <>
+                                      {!searchContent.trim() &&
+                                        showDefaultOnFocus &&
+                                        (nearbyLocation ||
+                                          recentSearches.length > 0 ||
+                                          recentlyViewed.length > 0) && (
+                                          <div className="px-4 py-2 border-b border-gray-100">
+                                            <div className="text-xs font-medium text-gray-500 uppercase">
+                                              Popular
+                                            </div>
+                                          </div>
+                                        )}
+                                      {places.map((place, index) => {
+                                        const placeId =
+                                          place.id || `place-${index}`;
 
-                                    {/* Arrow Icon */}
-                                    <div className="shrink-0">
+                                        const photoUrl = getPhotoUrl(place);
+                                        const hasImageError =
+                                          imageErrors[placeId];
+                                        const displayImage =
+                                          getPlacePhotoUrl(place) ||
+                                          (photoUrl && !hasImageError
+                                            ? photoUrl
+                                            : "https://via.placeholder.com/120x120/f3f4f6/9ca3af?text=Hotel");
+
+                                        return (
+                                          <div
+                                            key={placeId}
+                                            onClick={() =>
+                                              handleSelectPlace(place)
+                                            }
+                                            onMouseEnter={() =>
+                                              setSelectedIndex(index)
+                                            }
+                                            className={`flex items-center gap-3 px-3 py-2 cursor-pointer transition-all duration-200 ${selectedIndex === index
+                                              ? "bg-blue-50 border-l-4 border-blue-500"
+                                              : "hover:bg-gray-50 border-l-4 border-transparent "
+                                              }`}
+                                          >
+                                            {/* Hotel Image */}
+                                            <div className="shrink-0">
+                                              <div className="w-15 h-15 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center relative">
+                                                {imageLoading[placeId] && (
+                                                  <div className="absolute inset-0 flex items-center justify-center">
+                                                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+                                                  </div>
+                                                )}
+                                                <img
+                                                  src={displayImage}
+                                                  alt={
+                                                    place.displayName?.text ||
+                                                    "Hotel"
+                                                  }
+                                                  className={`w-full h-full object-cover transition-opacity duration-200 ${imageLoading[placeId]
+                                                    ? "opacity-0"
+                                                    : "opacity-100"
+                                                    }`}
+                                                  onLoadStart={() =>
+                                                    handleImageLoadStart(
+                                                      placeId,
+                                                    )
+                                                  }
+                                                  onLoad={() =>
+                                                    handleImageLoad(placeId)
+                                                  }
+                                                  onError={(e) =>
+                                                    handleImageError(placeId, e)
+                                                  }
+                                                  loading="lazy"
+                                                />
+                                              </div>
+                                            </div>
+
+                                            {/* Hotel Info */}
+                                            <div className="flex-1 min-w-0">
+                                              <div className="font-semibold text-gray-900 text-sm mb-1 truncate">
+                                                {place.displayName?.text ||
+                                                  "Hotel"}
+                                              </div>
+                                              {place.formattedAddress && (
+                                                <div className="text-gray-600 text-xs mb-2 line-clamp-1">
+                                                  {place.formattedAddress}
+                                                </div>
+                                              )}
+                                              {place.rating && (
+                                                <div className="flex items-center gap-2">
+                                                  <div className="flex items-center gap-1">
+                                                    <svg
+                                                      className="w-4 h-4 text-yellow-400 fill-current"
+                                                      viewBox="0 0 20 20"
+                                                    >
+                                                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                                                    </svg>
+                                                    <span className="text-gray-800 text-xs font-medium">
+                                                      {place.rating.toFixed(1)}
+                                                    </span>
+                                                  </div>
+                                                  {place.userRatingCount && (
+                                                    <span className="text-gray-500 text-xs">
+                                                      (
+                                                      {place.userRatingCount.toLocaleString()}{" "}
+                                                      reviews)
+                                                    </span>
+                                                  )}
+                                                  {place.priceLevel !==
+                                                    undefined && (
+                                                      <span className="text-gray-500 text-xs ml-2">
+                                                        {place.priceLevel === 0
+                                                          ? "Free"
+                                                          : "$".repeat(
+                                                            place.priceLevel,
+                                                          )}
+                                                      </span>
+                                                    )}
+                                                </div>
+                                              )}
+                                            </div>
+
+                                            {/* Arrow Icon */}
+                                            <div className="shrink-0">
+                                              <svg
+                                                className="w-5 h-5 text-gray-400"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                              >
+                                                <path
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                  strokeWidth={2}
+                                                  d="M9 5l7 7-7 7"
+                                                />
+                                              </svg>
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </>
+                                  ) : searchContent.length > 0 ? (
+                                    <div className="px-4 py-6 text-center text-gray-500 text-sm">
                                       <svg
-                                        className="w-5 h-5 text-gray-400"
+                                        className="w-12 h-12 mx-auto mb-2 text-gray-300"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -1163,37 +1363,37 @@ relative
                                           strokeLinecap="round"
                                           strokeLinejoin="round"
                                           strokeWidth={2}
-                                          d="M9 5l7 7-7 7"
+                                          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                         />
                                       </svg>
+                                      No hotels found for "{searchContent}"
                                     </div>
-                                  </div>
-                                );
-                              })}
-                            </>
-                          ) : searchContent.length > 0 ? (
-                            <div className="px-4 py-6 text-center text-gray-500 text-sm">
-                              <svg
-                                className="w-12 h-12 mx-auto mb-2 text-gray-300"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                                  ) : null}
+                                </div>
+                              )}
+                              {/* *************************************************** mdropdown */}
+
+                              <div
+                                className="absolute start-0 flex items-center   icon_search"
+                                onClick={() => setMobileDrop(false)}
                               >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                <IoIosArrowBack
+                                  onClick={() => setMobileDrop(false)}
                                 />
-                              </svg>
-                              No hotels found for "{searchContent}"
-                            </div>
-                          ) : null}
-                        </div>
-                      )}
+                              </div>
+                              <div className="absolute end-0 flex items-center ps-4  icon_search2">
+                                <CiSearch />
+                              </div>
+                            </form>
+                          </div>
+                        </Modal.Body>
+                      </Modal>
+
+                      {/* **************** */}
+
                       {/* *************************************************** mdropdown */}
 
-                      <div className="absolute start-0 flex items-center ps-4 pointer-events-none icon_search">
+                      <div className="absolute start-0 flex items-center ps-4  icon_search">
                         <CiSearch />
                       </div>
                       <button
